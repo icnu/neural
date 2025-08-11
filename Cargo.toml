@@ -1,5 +1,8 @@
 [workspace]
 members = [
-    "src/neural_backend"
+    "src/dao_canister",
+    "src/hub_canister",
+    "src/registry_canister",
+    "src/token_index_canister"
 ]
 resolver = "2"

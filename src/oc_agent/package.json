@@ -1,16 +1,16 @@
 {
-  "name": "neural",
+  "name": "oc_agent",
   "version": "1.0.0",
-  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "workspaces": [
-    "src/frontend",
-    "src/oc_agent"
-  ]
+  "description": "",
+  "devDependencies": {
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  }
 }

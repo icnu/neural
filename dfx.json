@@ -11,10 +11,31 @@
       "type": "custom",
       "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
     },
-    "neural_backend": {
-      "candid": "src/neural_backend/neural_backend.did",
-      "package": "neural_backend",
+    "dao_canister": {
+      "candid": "src/dao_canister/canister.did",
+      "package": "dao_canister",
       "type": "rust"
+    },
+    "hub_canister": {
+      "candid": "src/hub_canister/canister.did",
+      "package": "hub_canister",
+      "type": "rust"
+    },
+    "token_index_canister": {
+      "candid": "src/hub_canister/canister.did",
+      "package": "hub_canister",
+      "type": "rust"
+    },
+    "registry_canister": {
+      "candid": "src/registry_canister/canister.did",
+      "package": "registry_canister",
+      "type": "rust"
+    },
+    "frontend": {
+      "source": [
+        "src/frontend/dist"
+      ],
+      "type": "assets"
     }
   },
   "defaults": {
