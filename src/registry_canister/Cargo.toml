@@ -9,6 +9,10 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-candid = "0.10"
-ic-cdk = "0.17"
-ic-cdk-timers = "0.11" # Feel free to remove this dependency if you don't need timers
+candid = { workspace = true }
+ciborium = { workspace = true }
+ic-cdk = { workspace = true }
+ic-dummy-getrandom-for-wasm = { workspace = true }
+ic-stable-structures = { workspace = true }
+ic-vetkeys = { workspace = true }
+serde = { workspace = true }

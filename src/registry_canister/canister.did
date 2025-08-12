@@ -1,1 +1,12 @@
-service : { greet : (text) -> (text) query }
+type ByteBuf = record { inner : blob };
+type Result = variant { Ok : opt ByteBuf; Err : text };
+type Result_1 = variant { Ok : ByteBuf; Err : text };
+service : {
+  authorize_agent : (principal) -> ();
+  get_encrypted_value : (principal, ByteBuf, ByteBuf) -> (Result);
+  get_encrypted_vetkey : (principal, ByteBuf, ByteBuf) -> (Result_1);
+  get_vetkey_verification_key : () -> (ByteBuf);
+  insert_encrypted_value : (principal, ByteBuf, ByteBuf, ByteBuf) -> (Result);
+  is_authorized_agent : (principal) -> (bool) query;
+  remove_encrypted_value : (principal, ByteBuf, ByteBuf) -> (Result);
+}

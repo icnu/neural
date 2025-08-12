@@ -6,3 +6,12 @@ members = [
     "src/token_index_canister"
 ]
 resolver = "2"
+
+[workspace.dependencies]
+candid = "0.10"
+ciborium = "0.2.2"
+ic-cdk = "0.18.5"
+ic-dummy-getrandom-for-wasm = "0.1.0"
+ic-stable-structures = "0.6.9"
+ic-vetkeys = "0.3.0"
+serde = { version = "1.0.219", features = ["derive"] }
