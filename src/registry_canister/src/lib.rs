@@ -1,7 +1,7 @@
 use candid::Principal;
 use ic_cdk::{export_candid, init, query, update};
 use ic_vetkeys::{encrypted_maps::{VetKey, VetKeyVerificationKey}, types::{ByteBuf, EncryptedMapValue, TransportKey}};
-use crate::{access::{is_authorized, set_is_authorized, ACCESS_MASK_ENCRYPTED_DATA}, guard::{guard_caller_is_authorized, guard_caller_is_controller}};
+use crate::{access::{is_authorized, set_is_authorized, AccessMask}, guard::{guard_caller_is_authorized, guard_caller_is_controller}};
 
 mod memory;
 mod access;
@@ -73,12 +73,12 @@ async fn get_encrypted_vetkey(
 
 #[update(guard = "guard_caller_is_controller")]
 fn authorize_agent(principal: Principal) {
-    set_is_authorized(principal, ACCESS_MASK_ENCRYPTED_DATA);
+    set_is_authorized(principal, AccessMask::EncryptedData);
 }
 
 #[query]
 fn is_authorized_agent(principal: Principal) -> bool {
-    is_authorized(principal, ACCESS_MASK_ENCRYPTED_DATA)
+    is_authorized(principal, AccessMask::EncryptedData)
 }
 
 export_candid!();

@@ -7,12 +7,16 @@ thread_local! {
     static ACL: RefCell<AccessControlList<Memory>> = RefCell::new(AccessControlList::new(id_to_memory(MEMORY_ACCESS_CONTROL)));
 }
 
-pub const ACCESS_MASK_ENCRYPTED_DATA: u8 = 0x1;
-
-pub fn is_authorized(principal: Principal, access_mask: u8) -> bool {
-    ACL.with_borrow(|acl| acl.is_authorized(principal, access_mask))
+#[derive(Clone, Copy, Debug)]
+#[repr(u8)]
+pub enum AccessMask {
+    EncryptedData = 0x1
 }
 
-pub fn set_is_authorized(principal: Principal, access_mask: u8) {
-    ACL.with_borrow_mut(|acl| acl.set_is_authorized(principal, access_mask))
+pub fn is_authorized(principal: Principal, access_mask: AccessMask) -> bool {
+    ACL.with_borrow(|acl| acl.is_authorized(principal, access_mask as u8))
+}
+
+pub fn set_is_authorized(principal: Principal, access_mask: AccessMask) {
+    ACL.with_borrow_mut(|acl| acl.set_is_authorized(principal, access_mask as u8))
 }
