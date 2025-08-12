@@ -1,16 +1,16 @@
 use std::cell::RefCell;
 use candid::Principal;
 use common::acl::AccessControlList;
-use crate::memory::{id_to_memory, Memory, MEMORY_ACCESS_CONTROL};
+use crate::memory::{id_to_memory, Memory, MemoryIds};
 
 thread_local! {
-    static ACL: RefCell<AccessControlList<Memory>> = RefCell::new(AccessControlList::new(id_to_memory(MEMORY_ACCESS_CONTROL)));
+    static ACL: RefCell<AccessControlList<Memory>> = RefCell::new(AccessControlList::new(id_to_memory(MemoryIds::AccessControlList)));
 }
 
 #[derive(Clone, Copy, Debug)]
 #[repr(u8)]
 pub enum AccessMask {
-    EncryptedData = 0x1
+    Feeder = 0x1
 }
 
 pub fn is_authorized(principal: Principal, access_mask: AccessMask) -> bool {

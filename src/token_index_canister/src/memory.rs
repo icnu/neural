@@ -8,13 +8,12 @@ thread_local! {
         RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
 }
 
-pub fn id_to_memory(id: u8) -> Memory {
-    MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(id)))
+#[derive(Copy, Clone, Debug)]
+#[repr(u8)]
+pub enum MemoryIds {
+    AccessControlList = 0,
 }
 
-pub const MEMORY_ENCRYPTED_MAPS_DOMAIN_SEPARATOR: u8 = 0;
-pub const MEMORY_ENCRYPTED_MAPS_ACCESS_CONTROL: u8 = 1;
-pub const MEMORY_ENCRYPTED_MAPS_SHARED_KEYS: u8 = 3;
-pub const MEMORY_ENCRYPTED_MAPS: u8 = 4;
-pub const MEMORY_ACCESS_CONTROL: u8 = 5;
-pub const MEMORY_PLAINTEXT_MAP: u8 = 6;
+pub fn id_to_memory(id: MemoryIds) -> Memory {
+    MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(id as u8)))
+}
