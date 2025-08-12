@@ -1,1 +1,11 @@
-service : {}
+service : {
+  add_feeder_agent : (principal) -> ();
+  delete_snapshot : (nat) -> ();
+  get_block_num : () -> (nat) query;
+  get_token_balance : (blob) -> (opt nat) query;
+  get_token_balance_at_snapshot : (blob, nat) -> (opt nat) query;
+  is_feeder_agent : (principal) -> (bool) query;
+  new_snapshot : () -> (opt nat);
+  set_block_num : (nat) -> ();
+  set_token_balance : (blob, nat) -> ();
+}
