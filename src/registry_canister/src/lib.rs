@@ -1,5 +1,5 @@
 use candid::Principal;
-use ic_cdk::{export_candid, query, update};
+use ic_cdk::{export_candid, init, query, update};
 use ic_vetkeys::{encrypted_maps::{VetKey, VetKeyVerificationKey}, types::{ByteBuf, EncryptedMapValue, TransportKey}};
 use crate::{access::{is_authorized, set_is_authorized, ACL_ENCRYPTED_DATA}, guard::{guard_caller_is_authorized, guard_caller_is_controller}};
 
@@ -7,6 +7,27 @@ mod memory;
 mod access;
 mod guard;
 mod encrypted;
+mod plaintext;
+
+#[init]
+fn init(key_name: String) {
+    encrypted::init(key_name);
+}
+
+#[update]
+fn get_plaintext_value(key: ByteBuf) -> Option<ByteBuf> {
+    plaintext::get_plaintext_value(key)
+}
+
+#[update]
+fn insert_plaintext_value(key: ByteBuf, value: ByteBuf) -> Option<ByteBuf> {
+    plaintext::insert_plaintext_value(key, value)
+}
+
+#[update]
+fn remove_plaintext_value(key: ByteBuf) -> Option<ByteBuf> {
+    plaintext::remove_plaintext_value(key)
+}
 
 #[update(guard = "guard_caller_is_authorized")]
 fn get_encrypted_value(

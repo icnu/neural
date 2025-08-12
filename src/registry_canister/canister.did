@@ -1,12 +1,15 @@
 type ByteBuf = record { inner : blob };
 type Result = variant { Ok : opt ByteBuf; Err : text };
 type Result_1 = variant { Ok : ByteBuf; Err : text };
-service : {
+service : (text) -> {
   authorize_agent : (principal) -> ();
   get_encrypted_value : (principal, ByteBuf, ByteBuf) -> (Result);
   get_encrypted_vetkey : (principal, ByteBuf, ByteBuf) -> (Result_1);
+  get_plaintext_value : (ByteBuf) -> (opt ByteBuf);
   get_vetkey_verification_key : () -> (ByteBuf);
   insert_encrypted_value : (principal, ByteBuf, ByteBuf, ByteBuf) -> (Result);
+  insert_plaintext_value : (ByteBuf, ByteBuf) -> (opt ByteBuf);
   is_authorized_agent : (principal) -> (bool) query;
   remove_encrypted_value : (principal, ByteBuf, ByteBuf) -> (Result);
+  remove_plaintext_value : (ByteBuf) -> (opt ByteBuf);
 }

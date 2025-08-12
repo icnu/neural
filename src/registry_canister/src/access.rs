@@ -49,7 +49,7 @@ fn set_acl_node(index: u64, node: &AccessControlNode) {
 
 fn push_acl_node(node: &AccessControlNode) {
     ACL_LIST.with_borrow_mut(|acl_list| {
-        acl_list.push(&node);
+        acl_list.push(&node).unwrap();
     })
 }
 
