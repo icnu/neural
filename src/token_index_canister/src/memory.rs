@@ -12,6 +12,7 @@ thread_local! {
 #[repr(u8)]
 pub enum MemoryIds {
     AccessControlList = 0,
+    TokenIndex = 1,
 }
 
 pub fn id_to_memory(id: MemoryIds) -> Memory {
