@@ -1,4 +1,4 @@
-use crate::access::{self, is_authorized, AccessMask};
+use crate::access::{is_authorized, AccessMask};
 
 pub fn guard_caller_is_controller() -> Result<(), String> {
     let caller = ic_cdk::api::msg_caller();

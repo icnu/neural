@@ -4,7 +4,7 @@ use ic_cdk::management_canister::{VetKDCurve, VetKDKeyId};
 use ic_stable_structures::storable::Blob;
 use ic_vetkeys::encrypted_maps::{EncryptedMaps, VetKey, VetKeyVerificationKey};
 use ic_vetkeys::types::{AccessRights, ByteBuf, EncryptedMapValue, TransportKey};
-use crate::memory::{id_to_memory, MEMORY_ENCRYPTED_MAPS, MEMORY_ENCRYPTED_MAPS_ACCESS_CONTROL, MEMORY_ENCRYPTED_MAPS_DOMAIN_SEPARATOR, MEMORY_ENCRYPTED_MAPS_SHARED_KEYS};
+use crate::memory::{id_to_memory, MemoryIds};
 
 thread_local! {
     static ENCRYPTED_MAPS: RefCell<Option<EncryptedMaps<AccessRights>>> =
@@ -22,10 +22,10 @@ pub fn init(key_name: String) {
         encrypted_maps.replace(EncryptedMaps::init(
             ENCRYPTED_MAPS_DOMAIN_SEPARATOR,
             key_id,
-            id_to_memory(MEMORY_ENCRYPTED_MAPS_DOMAIN_SEPARATOR),
-            id_to_memory(MEMORY_ENCRYPTED_MAPS_ACCESS_CONTROL),
-            id_to_memory(MEMORY_ENCRYPTED_MAPS_SHARED_KEYS),
-            id_to_memory(MEMORY_ENCRYPTED_MAPS),
+            id_to_memory(MemoryIds::EncryptedMapsDomainSeparator),
+            id_to_memory(MemoryIds::EncryptedMapsAccessControl),
+            id_to_memory(MemoryIds::EncryptedMapsSharedKeys),
+            id_to_memory(MemoryIds::EncryptedMaps),
         ))
     });
 }

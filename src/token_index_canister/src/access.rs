@@ -1,10 +1,10 @@
 use std::cell::RefCell;
 use candid::Principal;
 use common::acl::AccessControlList;
-use crate::memory::{id_to_memory, Memory, MemoryIds};
+use crate::memory::{id_to_memory, Memory, MEMORY_ACCESS_CONTROL};
 
 thread_local! {
-    static ACL: RefCell<AccessControlList<Memory>> = RefCell::new(AccessControlList::new(id_to_memory(MemoryIds::AccessControlList)));
+    static ACL: RefCell<AccessControlList<Memory>> = RefCell::new(AccessControlList::new(id_to_memory(MEMORY_ACCESS_CONTROL)));
 }
 
 #[derive(Clone, Copy, Debug)]

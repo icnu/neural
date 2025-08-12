@@ -1,10 +1,10 @@
 use std::cell::RefCell;
 use ic_stable_structures::BTreeMap;
 use ic_vetkeys::types::ByteBuf;
-use crate::memory::{id_to_memory, Memory, MEMORY_PLAINTEXT_MAP};
+use crate::memory::{id_to_memory, Memory, MemoryIds};
 
 thread_local! {
-    static PLAINTEXT_MAP: RefCell<BTreeMap<ByteBuf, ByteBuf, Memory>> = RefCell::new(BTreeMap::new(id_to_memory(MEMORY_PLAINTEXT_MAP)));
+    static PLAINTEXT_MAP: RefCell<BTreeMap<ByteBuf, ByteBuf, Memory>> = RefCell::new(BTreeMap::new(id_to_memory(MemoryIds::PlaintextMap)));
 }
 
 pub fn insert_plaintext_value(key: ByteBuf, value: ByteBuf) -> Option<ByteBuf> {
