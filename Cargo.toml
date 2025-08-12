@@ -3,7 +3,8 @@ members = [
     "src/dao_canister",
     "src/hub_canister",
     "src/registry_canister",
-    "src/token_index_canister"
+    "src/token_index_canister",
+    "src/common"
 ]
 resolver = "2"
 

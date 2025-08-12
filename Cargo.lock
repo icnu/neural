@@ -176,6 +176,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "common"
+version = "0.1.0"
+dependencies = [
+ "candid",
+ "ciborium",
+ "ic-dummy-getrandom-for-wasm",
+ "ic-stable-structures",
+ "ic-vetkeys",
+ "serde",
+]
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -935,6 +947,7 @@ version = "0.1.0"
 dependencies = [
  "candid",
  "ciborium",
+ "common",
  "ic-cdk",
  "ic-dummy-getrandom-for-wasm",
  "ic-stable-structures",
