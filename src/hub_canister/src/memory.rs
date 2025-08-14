@@ -13,6 +13,8 @@ thread_local! {
 pub enum MemoryIds {
     DaoCanisterWasm = 0,
     VoteCanisterWasm = 1,
+    DaoId = 2,
+    DaoMetadata = 3,
 }
 
 pub fn id_to_memory(id: MemoryIds) -> Memory {

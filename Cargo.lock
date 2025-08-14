@@ -235,6 +235,7 @@ version = "0.1.0"
 dependencies = [
  "candid",
  "ic-cdk",
+ "serde",
 ]
 
 [[package]]
@@ -517,8 +518,10 @@ name = "hub_canister"
 version = "0.1.0"
 dependencies = [
  "candid",
+ "common",
  "ic-cdk",
  "ic-stable-structures",
+ "serde",
 ]
 
 [[package]]
