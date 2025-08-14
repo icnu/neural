@@ -1,10 +1,10 @@
 use ic_cdk::{export_candid, query, update};
-
 use crate::{guards::guard_caller_is_controller, wasm::Wasm};
 
 mod memory;
 mod guards;
 mod wasm;
+mod stake;
 
 #[update(guard="guard_caller_is_controller")]
 fn set_dao_canister_wasm(wasm: Wasm) {

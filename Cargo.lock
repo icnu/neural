@@ -181,10 +181,12 @@ version = "0.1.0"
 dependencies = [
  "candid",
  "ciborium",
+ "ic-cdk",
  "ic-dummy-getrandom-for-wasm",
  "ic-stable-structures",
  "ic-vetkeys",
  "serde",
+ "serde_bytes",
 ]
 
 [[package]]
