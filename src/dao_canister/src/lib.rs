@@ -3,6 +3,7 @@ use crate::metadata::{InitArgs, Metadata};
 
 mod metadata;
 mod memory;
+mod execution;
 
 #[init]
 fn init(args: InitArgs) {

@@ -9,10 +9,11 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
+alloy = { git = "https://github.com/ic-alloy/ic-alloy.git", tag = "v0.3.5-icp.0", default-features = false, features = ["icp"]}
 candid = "0.10"
 ciborium = "0.2.2"
-ic-cdk = "0.18.5"
+ic-cdk = "0.17"
 ic-dummy-getrandom-for-wasm = "0.1.0"
 ic-stable-structures = "0.6.9"
-ic-vetkeys = "0.3.0"
+ic-vetkeys = "0.1.0"
 serde = { version = "1.0.219", features = ["derive"] }

@@ -9,12 +9,12 @@ mod index;
 
 #[update]
 fn new_snapshot() -> Option<u128> {
-    index::new_snapshot(ic_cdk::api::msg_caller())
+    index::new_snapshot(ic_cdk::api::caller())
 }
 
 #[update]
 fn delete_snapshot(snapshot: u128) {
-    index::delete_snapshot(snapshot, ic_cdk::api::msg_caller());
+    index::delete_snapshot(snapshot, ic_cdk::api::caller());
 }
 
 #[update(guard = "guard_caller_is_feeder")]

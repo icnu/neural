@@ -1,0 +1,3 @@
+struct EtheruemExecutionData {
+    to: Address
+}

@@ -1,9 +1,9 @@
 use std::cell::RefCell;
 use candid::Principal;
-use ic_cdk::management_canister::{VetKDCurve, VetKDKeyId};
 use ic_stable_structures::storable::Blob;
 use ic_vetkeys::encrypted_maps::{EncryptedMaps, VetKey, VetKeyVerificationKey};
 use ic_vetkeys::types::{AccessRights, ByteBuf, EncryptedMapValue, TransportKey};
+use ic_vetkeys::vetkd_api_types::{VetKDCurve, VetKDKeyId};
 use crate::memory::{id_to_memory, MemoryIds};
 
 thread_local! {
@@ -39,7 +39,7 @@ pub fn get_encrypted_value(
     let map_id = (map_owner, map_name);
     ENCRYPTED_MAPS.with_borrow(|encrypted_maps| {
         encrypted_maps.as_ref().unwrap().get_encrypted_value(
-            ic_cdk::api::msg_caller(),
+            ic_cdk::api::caller(),
             map_id,
             bytebuf_to_blob(map_key)?,
         )
@@ -56,7 +56,7 @@ pub fn insert_encrypted_value(
     let map_id = (map_owner, map_name);
     ENCRYPTED_MAPS.with_borrow_mut(|encrypted_maps| {
         encrypted_maps.as_mut().unwrap().insert_encrypted_value(
-            ic_cdk::api::msg_caller(),
+            ic_cdk::api::caller(),
             map_id,
             bytebuf_to_blob(map_key)?,
             value,
@@ -73,7 +73,7 @@ pub fn remove_encrypted_value(
     let map_id = (map_owner, map_name);
     ENCRYPTED_MAPS.with_borrow_mut(|encrypted_maps| {
         encrypted_maps.as_mut().unwrap().remove_encrypted_value(
-            ic_cdk::api::msg_caller(),
+            ic_cdk::api::caller(),
             map_id,
             bytebuf_to_blob(map_key)?,
         )
@@ -101,7 +101,7 @@ pub async fn get_encrypted_vetkey(
     Ok(ENCRYPTED_MAPS
         .with_borrow(|encrypted_maps| {
             encrypted_maps.as_ref().unwrap().get_encrypted_vetkey(
-                ic_cdk::api::msg_caller(),
+                ic_cdk::api::caller(),
                 map_id,
                 transport_key,
             )

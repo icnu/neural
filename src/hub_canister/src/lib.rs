@@ -13,7 +13,7 @@ const STAKE_AMOUNT: u64 = 5_000_000_000;
 
 #[update]
 fn request_new_dao() -> Account {
-    let caller = ic_cdk::api::msg_caller();
+    let caller = ic_cdk::api::caller();
     let id = dao::request_new_dao(caller);
     let payment_account = get_payment_account(id);
     payment_account
