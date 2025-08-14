@@ -9,9 +9,23 @@ function build_canister {
     candid-extractor "$canister_wasm" > "$canister_did"
 }
 
-for dir in src/*_canister/; do
-    if [[ -d "$dir" ]]; then
-        canister=$(basename "$dir")
-        build_canister "$canister"
-    fi
-done
+function generate_bindings {
+    didc bind -t rs $1 > $2
+    sed -i '' 's/#!\[allow(dead_code, unused_imports)\]/#![allow(dead_code, unused_imports, deprecated)]/' $2
+}
+
+function build_canisters {
+    for dir in src/*_canister/; do
+        if [[ -d "$dir" ]]; then
+            canister=$(basename "$dir")
+            build_canister "$canister"
+        fi
+    done
+}
+
+build_canisters
+
+generate_bindings src/common/candid/icp.did src/common/src/bindings/icp.rs
+generate_bindings src/dao_canister/canister.did src/common/src/bindings/dao_canister.rs
+
+build_canisters # run again with updated bindings

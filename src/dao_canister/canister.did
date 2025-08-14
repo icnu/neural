@@ -1,2 +1,2 @@
-type DaoInitArgs = record { id : nat64; creator : principal };
-service : (DaoInitArgs) -> { greet : (text) -> (text) query }
+type InitArgs = record { id : nat64; creator : principal };
+service : (InitArgs) -> { greet : (text) -> (text) query }

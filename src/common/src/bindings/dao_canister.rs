@@ -5,7 +5,7 @@ use candid::{self, CandidType, Deserialize, Principal};
 use ic_cdk::api::call::CallResult as Result;
 
 #[derive(CandidType, Deserialize)]
-pub struct DaoInitArgs { pub id: u64, pub creator: Principal }
+pub struct InitArgs { pub id: u64, pub creator: Principal }
 
 pub struct Service(pub Principal);
 impl Service {

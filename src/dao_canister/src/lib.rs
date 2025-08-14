@@ -1,20 +1,17 @@
-use candid::{CandidType, Deserialize, Principal};
-use ic_cdk::{export_candid, init};
+use ic_cdk::{export_candid, init, query};
+use crate::metadata::{InitArgs, Metadata};
 
-#[derive(Deserialize, CandidType)]
-struct DaoInitArgs {
-    id: u64,
-    creator: Principal,
-}
+mod metadata;
+mod memory;
 
 #[init]
-fn init(args: DaoInitArgs) {
-
+fn init(args: InitArgs) {
+    metadata::init_metadata(args);
 }
 
-#[ic_cdk::query]
-fn greet(name: String) -> String {
-    format!("Hello, {}!", name)
+#[query]
+fn get_metadata() -> Metadata {
+    metadata::get_metadata()
 }
 
 export_candid!();
