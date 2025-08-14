@@ -12,6 +12,7 @@ thread_local! {
 #[repr(u8)]
 pub enum MemoryIds {
     Metadata = 0,
+    Nonce = 1,
 }
 
 pub fn id_to_memory(id: MemoryIds) -> Memory {

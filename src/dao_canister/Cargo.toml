@@ -15,3 +15,4 @@ ic-cdk = { workspace = true }
 ic-dummy-getrandom-for-wasm = { workspace = true }
 ic-stable-structures = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
+serde_bytes = { workspace = true }
