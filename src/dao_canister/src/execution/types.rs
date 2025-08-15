@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use candid::{CandidType, Decode, Deserialize, Encode};
 use ic_stable_structures::{storable::Bound, Storable};
 
-#[derive(CandidType, Deserialize)]
+#[derive(CandidType, Deserialize, Clone)]
 pub struct EthereumExecutionData {
     pub to: String,
     pub value: u128,

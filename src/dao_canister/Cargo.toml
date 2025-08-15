@@ -11,6 +11,7 @@ crate-type = ["cdylib"]
 [dependencies]
 alloy = { workspace = true }
 candid = { workspace = true }
+common = { path = "../common" }
 ic-cdk = { workspace = true }
 ic-dummy-getrandom-for-wasm = { workspace = true }
 ic-stable-structures = { workspace = true }

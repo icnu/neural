@@ -3,7 +3,8 @@ use alloy::{network::{EthereumWallet, TransactionBuilder}, primitives::Address, 
 use candid::Principal;
 use ic_stable_structures::Cell;
 use serde_bytes::ByteBuf;
-use crate::{execution::types::EthereumExecutionData, memory::{id_to_memory, Memory, MemoryIds}};
+use crate::memory::{id_to_memory, Memory, MemoryIds};
+pub use crate::execution::types::EthereumExecutionData;
 
 mod types;
 

@@ -1013,6 +1013,7 @@ version = "0.1.0"
 dependencies = [
  "alloy",
  "candid",
+ "common",
  "ic-cdk 0.17.2",
  "ic-dummy-getrandom-for-wasm",
  "ic-stable-structures",
