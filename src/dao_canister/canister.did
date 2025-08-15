@@ -1,2 +1,10 @@
 type InitArgs = record { id : nat64; creator : principal };
-service : (InitArgs) -> { greet : (text) -> (text) query }
+type Metadata = record {
+  id : nat64;
+  url : opt text;
+  creator : principal;
+  token : opt principal;
+  logo : opt text;
+  name : opt text;
+};
+service : (InitArgs) -> { get_metadata : () -> (Metadata) query }

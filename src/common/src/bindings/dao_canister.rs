@@ -6,11 +6,20 @@ use ic_cdk::api::call::CallResult as Result;
 
 #[derive(CandidType, Deserialize)]
 pub struct InitArgs { pub id: u64, pub creator: Principal }
+#[derive(CandidType, Deserialize)]
+pub struct Metadata {
+  pub id: u64,
+  pub url: Option<String>,
+  pub creator: Principal,
+  pub token: Option<Principal>,
+  pub logo: Option<String>,
+  pub name: Option<String>,
+}
 
 pub struct Service(pub Principal);
 impl Service {
-  pub async fn greet(&self, arg0: &String) -> Result<(String,)> {
-    ic_cdk::call(self.0, "greet", (arg0,)).await
+  pub async fn get_metadata(&self) -> Result<(Metadata,)> {
+    ic_cdk::call(self.0, "get_metadata", ()).await
   }
 }
 

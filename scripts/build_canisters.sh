@@ -27,5 +27,6 @@ build_canisters
 
 generate_bindings src/common/candid/icp.did src/common/src/bindings/icp.rs
 generate_bindings src/dao_canister/canister.did src/common/src/bindings/dao_canister.rs
+generate_bindings src/identity_canister/canister.did src/common/src/bindings/identity_canister.rs
 
 build_canisters # run again with updated bindings
