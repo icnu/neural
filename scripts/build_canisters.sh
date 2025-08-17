@@ -30,5 +30,6 @@ generate_bindings src/dao_canister/canister.did src/common/src/bindings/dao_cani
 generate_bindings src/identity_canister/canister.did src/common/src/bindings/identity_canister.rs
 generate_bindings src/token_index_canister/canister.did src/common/src/bindings/token_index_canister.rs
 generate_bindings src/hub_canister/canister.did src/common/src/bindings/hub_canister.rs
+generate_bindings src/vote_canister/canister.did src/common/src/bindings/vote_canister.rs
 
 build_canisters # run again with updated bindings

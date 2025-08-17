@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 use candid::Principal;
-use common::bindings::token_index_canister::Service;
+use common::bindings::{token_index_canister::Service, vote_canister::InitArgs};
 use ic_stable_structures::{BTreeMap, Cell};
 use crate::{execution::execute_txn, get_metadata, memory::{id_to_memory, Memory, MemoryIds}, proposals::{deploy::deploy_vote_canister, types::{Proposal, ProposalMetadata, ProposalState, ProposalVerdict}}};
 
@@ -44,10 +44,15 @@ pub async fn request_new_proposal(metadata: ProposalMetadata, proposer: Principa
     let token_canister = Service(dao_metadata.token.unwrap());
     let snapshot_id = token_canister.new_snapshot().await.unwrap().0.unwrap();
 
-    proposal.snapshot_id = Some(snapshot_id.0.try_into().unwrap());
+    proposal.snapshot_id = Some(snapshot_id.clone().0.try_into().unwrap());
     PROPOSALS.with_borrow_mut(|map| map.insert(id, proposal.clone()));
 
-    deploy_vote_canister(id, creator).await;
+    deploy_vote_canister(InitArgs {
+        proposal_id: id,
+        snapshot_id: snapshot_id.0.try_into().unwrap(),
+        token_canister: dao_metadata.token.unwrap(),
+        dao_canister: ic_cdk::id()
+    }).await;
 
     proposal.state = ProposalState::Open;
     PROPOSALS.with_borrow_mut(|map| map.insert(id, proposal.clone()));

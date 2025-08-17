@@ -1,0 +1,7 @@
+type InitArgs = record {
+  token_canister : principal;
+  proposal_id : nat64;
+  dao_canister : principal;
+  snapshot_id : nat64;
+};
+service : (InitArgs) -> {}
