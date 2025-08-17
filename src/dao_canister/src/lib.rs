@@ -8,7 +8,7 @@ mod proposals;
 
 #[init]
 fn init(args: InitArgs) {
-    metadata::init_metadata(args);
+    metadata::init_metadata(args, ic_cdk::caller());
 }
 
 #[query]

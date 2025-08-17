@@ -1,9 +1,14 @@
 use candid::{encode_one, Principal};
-use common::bindings::dao_canister::InitArgs;
+use common::bindings::{dao_canister::InitArgs, hub_canister::{self, Service}};
 use ic_cdk::api::management_canister::main::{create_canister, install_code, CanisterInstallMode, CanisterSettings, CreateCanisterArgument, InstallCodeArgument};
-use crate::wasm::get_dao_canister_wasm;
+
+use crate::metadata::get_metadata;
 
 pub async fn deploy_vote_canister(id: u64, creator: Principal) -> Principal {
+    let hub_canister = get_metadata().hub;
+    let hub_service = Service(hub_canister);
+    let vote_canister_wasm = hub_service.get_vote_canister_wasm().await.unwrap().0;
+
     let canister_id = create_canister(CreateCanisterArgument {
             settings: Some(CanisterSettings {
                 controllers: Some(vec![creator, ic_cdk::id()]),
@@ -21,7 +26,7 @@ pub async fn deploy_vote_canister(id: u64, creator: Principal) -> Principal {
     install_code(InstallCodeArgument {
         mode: CanisterInstallMode::Install,
         canister_id,
-        wasm_module: get_dao_canister_wasm(),
+        wasm_module: vote_canister_wasm.into_vec(),
         arg: encode_one(InitArgs { id, creator }).unwrap()
     }).await.unwrap();
 

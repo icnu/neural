@@ -6,6 +6,7 @@ use ic_stable_structures::{storable::Bound, Storable};
 #[derive(CandidType, Deserialize, Clone)]
 pub struct Metadata {
     pub id: u64,
+    pub hub: Principal,
     pub name: Option<String>,
     pub logo: Option<String>,
     pub url: Option<String>,
@@ -32,9 +33,10 @@ pub struct InitArgs {
 }
 
 impl Metadata {
-    pub fn new(init_args: InitArgs) -> Self {
+    pub fn new(init_args: InitArgs, hub: Principal) -> Self {
         Self {
             id: init_args.id,
+            hub,
             name: None,
             logo: None,
             url: None,
@@ -46,6 +48,7 @@ impl Metadata {
     pub fn default() -> Self {
         Self {
             id: 0,
+            hub: Principal::anonymous(),
             name: None,
             logo: None,
             url: None,

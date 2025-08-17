@@ -47,7 +47,7 @@ pub async fn request_new_proposal(metadata: ProposalMetadata, proposer: Principa
     proposal.snapshot_id = Some(snapshot_id.0.try_into().unwrap());
     PROPOSALS.with_borrow_mut(|map| map.insert(id, proposal.clone()));
 
-    // deploy_vote_canister(id, creator) // TODO
+    deploy_vote_canister(id, creator).await;
 
     proposal.state = ProposalState::Open;
     PROPOSALS.with_borrow_mut(|map| map.insert(id, proposal.clone()));
