@@ -5,7 +5,7 @@ use ic_stable_structures::{BTreeMap, Cell};
 use crate::{execution::execute_txn, get_metadata, memory::{id_to_memory, Memory, MemoryIds}, proposals::{deploy::deploy_vote_canister, types::{Proposal, ProposalMetadata, ProposalState, ProposalVerdict}}};
 
 mod deploy;
-mod types;
+pub mod types;
 
 thread_local! {
     static PROPOSALS_ID: RefCell<Cell<u64, Memory>> = RefCell::new(Cell::init(id_to_memory(MemoryIds::ProposalsId), 1).unwrap());
