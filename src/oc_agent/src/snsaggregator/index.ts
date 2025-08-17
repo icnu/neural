@@ -1,0 +1,1 @@
+export { SnsAggregatorService, SnsAggregatorServiceClass } from './service';

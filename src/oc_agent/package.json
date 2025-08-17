@@ -1,7 +1,8 @@
 {
-  "name": "oc_agent",
+  "name": "discord-proxy",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +12,22 @@
   "description": "",
   "devDependencies": {
     "tsx": "^4.20.3",
-    "typescript": "^5.9.2"
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@dfinity/agent": "^2.3.0",
+    "@dfinity/candid": "^2.3.0",
+    "@dfinity/identity": "^2.3.0",
+    "@dfinity/principal": "^2.3.0",
+    "@dfinity/sns": "^3.7.1",
+    "@dfinity/vetkeys": "^0.3.0",
+    "@fastify/cors": "^11.0.1",
+    "@noble/curves": "^1.9.4",
+    "@noble/hashes": "^1.8.0",
+    "discord.js": "^14.21.0",
+    "dotenv": "^17.2.0",
+    "fastify": "^5.4.0",
+    "ulid": "^3.0.1",
+    "uuid": "^11.1.0"
   }
 }
