@@ -56,8 +56,4 @@ impl Metadata {
             token: None,
         }
     }
-
-    pub fn is_default(&self) -> bool {
-        self.id == 0
-    }
 }
