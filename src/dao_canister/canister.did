@@ -1,10 +1,42 @@
+type EthereumExecutionData = record {
+  to : text;
+  value : nat;
+  data : blob;
+  chain_id : nat;
+  gas_limit : nat;
+};
 type InitArgs = record { id : nat64; creator : principal };
 type Metadata = record {
   id : nat64;
+  hub : principal;
   url : opt text;
   creator : principal;
   token : opt principal;
   logo : opt text;
   name : opt text;
 };
-service : (InitArgs) -> { get_metadata : () -> (Metadata) query }
+type Proposal = record {
+  id : nat64;
+  title : text;
+  description : text;
+  verdict : opt ProposalVerdict;
+  state : ProposalState;
+  execution_txn_hash : opt text;
+  proposer : principal;
+  execution_payload : opt EthereumExecutionData;
+  vote_canister : opt principal;
+  snapshot_id : opt nat;
+};
+type ProposalMetadata = record {
+  title : text;
+  description : text;
+  execution_payload : opt EthereumExecutionData;
+};
+type ProposalState = variant { VotingClosed; Init; Open; Executed };
+type ProposalVerdict = variant { REJECTED; ACCEPTED };
+service : (InitArgs) -> {
+  get_metadata : () -> (Metadata) query;
+  get_proposal : (nat64) -> (opt Proposal) query;
+  request_new_proposal : (ProposalMetadata) -> (nat64);
+  request_proposal_voting_close : (nat64, ProposalVerdict) -> ();
+}

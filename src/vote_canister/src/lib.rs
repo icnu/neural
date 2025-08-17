@@ -1,18 +1,29 @@
-use candid::{CandidType, Principal};
-use ic_cdk::{export_candid, init};
-use serde::Deserialize;
+use common::bindings::dao_canister::ProposalVerdict;
+use ic_cdk::{export_candid, init, query, update};
+use crate::vote::types::{InitArgs, VoteMetadata};
 
-#[derive(CandidType, Deserialize)]
-struct InitArgs {
-    proposal_id: u64,
-    token_canister: Principal,
-    dao_canister: Principal,
-    snapshot_id: u64,
-}
+mod vote;
+mod memory;
+mod strategy;
 
 #[init]
 fn init(args: InitArgs) {
+    vote::init(args);
+}
 
+#[query]
+fn get_metadata() -> VoteMetadata {
+    vote::get_metadata()
+}
+
+#[update]
+async fn cast_vote(vote: ProposalVerdict) {
+    vote::cast_vote(ic_cdk::caller(), vote).await;
+}
+
+#[update]
+async fn close_vote() {
+    vote::close_vote().await;
 }
 
 export_candid!();

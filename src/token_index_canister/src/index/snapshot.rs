@@ -7,7 +7,7 @@ use crate::{index::types::SnapshotMetadata, memory::{id_with_incr_to_memory, Mem
 type SnapshotId = u128;
 type SnapshotIndex = u8;
 type Balance = u128;
-type Address = Vec<u8>;
+type Address = String;
 
 pub struct SnapshotManager {
     metadata_store: BTreeMap<SnapshotId, SnapshotMetadata, Memory>,

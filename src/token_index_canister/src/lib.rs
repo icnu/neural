@@ -18,7 +18,7 @@ fn delete_snapshot(snapshot: u128) {
 }
 
 #[update(guard = "guard_caller_is_feeder")]
-fn set_token_balance(user: Vec<u8>, balance: u128) {
+fn set_token_balance(user: String, balance: u128) {
     set_balance(user, balance);
 }
 
@@ -28,12 +28,12 @@ fn set_block_num(block_num: u128) {
 }
 
 #[query]
-fn get_token_balance(user: Vec<u8>) -> Option<u128> {
+fn get_token_balance(user: String) -> Option<u128> {
     get_balance(user)
 }
 
 #[query]
-fn get_token_balance_at_snapshot(user: Vec<u8>, snapshot: u128) -> Option<u128> {
+fn get_token_balance_at_snapshot(user: String, snapshot: u128) -> Option<u128> {
     get_balance_at_snapshot(user, snapshot)
 }
 

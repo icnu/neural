@@ -14,3 +14,4 @@ common = { path = "../common" }
 ic-cdk = { workspace = true }
 ic-stable-structures = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
+serde_bytes = "0.11.17"

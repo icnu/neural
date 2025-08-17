@@ -4,7 +4,6 @@ members = [
     "src/hub_canister",
     "src/registry_canister",
     "src/token_index_canister",
-    "src/identity_canister",
     "src/vote_canister",
     "src/common"
 ]

@@ -10,7 +10,7 @@ const NUM_SNAPSHOTS: u8 = 10;
 
 thread_local! {
     static BLOCK_NUM: RefCell<Cell<u128, Memory>> = RefCell::new(Cell::init(id_to_memory(MemoryIds::TokenBlock), 0).unwrap());
-    static INDEX: RefCell<BTreeMap<Vec<u8>, u128, Memory>> = RefCell::new(BTreeMap::new(id_to_memory(MemoryIds::TokenIndex)));
+    static INDEX: RefCell<BTreeMap<String, u128, Memory>> = RefCell::new(BTreeMap::new(id_to_memory(MemoryIds::TokenIndex)));
     static SNAPSHOT: RefCell<SnapshotManager> = RefCell::new(SnapshotManager::new(
         id_to_memory(MemoryIds::SnapshotMetadata),
         MemoryIds::SnapshotStores,
@@ -27,25 +27,26 @@ pub fn delete_snapshot(id: u128, caller: Principal) {
     SNAPSHOT.with_borrow_mut(|manager| manager.delete_snapshot(id, caller));
 }
 
-pub fn get_balance(user: Vec<u8>) -> Option<u128> {
+pub fn get_balance(user: String) -> Option<u128> {
     INDEX.with_borrow(|index| {
-        index.get(&user)
+        index.get(&user.to_lowercase())
     })
 }
 
-pub fn get_balance_at_snapshot(user: Vec<u8>, snapshot: u128) -> Option<u128> {
+pub fn get_balance_at_snapshot(user: String, snapshot: u128) -> Option<u128> {
     let snapshot_value = SNAPSHOT.with_borrow(|manager| manager.get_value(&user, snapshot));
     
     if snapshot_value.is_some() { return snapshot_value; }
-    get_balance(user)
+    get_balance(user.to_lowercase())
 }
 
 pub fn get_block_num() -> u128 {
     BLOCK_NUM.with_borrow(|cell| cell.get().clone())
 }
 
-pub fn set_balance(user: Vec<u8>, balance: u128) -> Option<u128> {
+pub fn set_balance(user: String, balance: u128) -> Option<u128> {
     INDEX.with_borrow_mut(|index| {
+        let user = user.to_lowercase();
         SNAPSHOT.with_borrow_mut(|manager| manager.set_value(user.clone(), balance));
         index.insert(user, balance)
     })
