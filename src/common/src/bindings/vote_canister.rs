@@ -11,5 +11,33 @@ pub struct InitArgs {
   pub dao_canister: Principal,
   pub snapshot_id: u64,
 }
+#[derive(CandidType, Deserialize)]
+pub enum ProposalVerdict {
+  #[serde(rename="REJECTED")]
+  Rejected,
+  #[serde(rename="ACCEPTED")]
+  Accepted,
+}
+#[derive(CandidType, Deserialize)]
+pub struct VoteMetadata {
+  pub token_canister: Principal,
+  pub vote_reject: candid::Nat,
+  pub vote_accept: candid::Nat,
+  pub proposal_id: u64,
+  pub dao_canister: Principal,
+  pub snapshot_id: u64,
+}
 
+pub struct Service(pub Principal);
+impl Service {
+  pub async fn cast_vote(&self, arg0: &ProposalVerdict) -> Result<()> {
+    ic_cdk::call(self.0, "cast_vote", (arg0,)).await
+  }
+  pub async fn close_vote(&self) -> Result<()> {
+    ic_cdk::call(self.0, "close_vote", ()).await
+  }
+  pub async fn get_metadata(&self) -> Result<(VoteMetadata,)> {
+    ic_cdk::call(self.0, "get_metadata", ()).await
+  }
+}
 

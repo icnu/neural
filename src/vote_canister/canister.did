@@ -4,4 +4,17 @@ type InitArgs = record {
   dao_canister : principal;
   snapshot_id : nat64;
 };
-service : (InitArgs) -> {}
+type ProposalVerdict = variant { REJECTED; ACCEPTED };
+type VoteMetadata = record {
+  token_canister : principal;
+  vote_reject : nat;
+  vote_accept : nat;
+  proposal_id : nat64;
+  dao_canister : principal;
+  snapshot_id : nat64;
+};
+service : (InitArgs) -> {
+  cast_vote : (ProposalVerdict) -> ();
+  close_vote : () -> ();
+  get_metadata : () -> (VoteMetadata) query;
+}

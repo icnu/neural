@@ -4,13 +4,6 @@ use candid::{CandidType, Decode, Deserialize, Encode, Principal};
 use ic_stable_structures::{storable::Bound, Storable};
 
 #[derive(CandidType, Deserialize)]
-pub enum VoteDecision {
-    Accept,
-    Reject,
-    Undecided
-}
-
-#[derive(CandidType, Deserialize)]
 pub struct InitArgs {
     proposal_id: u64,
     token_canister: Principal,
