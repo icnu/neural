@@ -33,7 +33,7 @@
     },
     "frontend": {
       "source": [
-        "src/frontend/dist"
+        "src/frontend/out"
       ],
       "type": "assets"
     },
