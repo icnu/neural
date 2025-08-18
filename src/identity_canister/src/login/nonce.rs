@@ -11,9 +11,10 @@ pub fn generate_user_nonce(user: &String) -> String {
     let time = ic_cdk::api::time() as u128;
     let counter = COUNTER.with_borrow(|cell| cell.get().clone());
     let nonce = (time * 1_0000) + (counter % 1_000);
+    let nonce = format!("{:x}", nonce);
 
-    NONCE.with_borrow_mut(|map| map.insert(user.clone(), nonce.to_string()));
-    nonce.to_string()
+    NONCE.with_borrow_mut(|map| map.insert(user.clone(), nonce.clone()));
+    nonce
 }
 
 pub fn get_user_nonce(user: &String) -> Option<String> {

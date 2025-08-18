@@ -1,0 +1,5 @@
+service : {
+  get_address : (principal) -> (text) query;
+  get_login_message : (text) -> (text);
+  login : (text, text) -> ();
+}

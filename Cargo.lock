@@ -1931,6 +1931,7 @@ version = "0.1.0"
 dependencies = [
  "candid",
  "common",
+ "hex",
  "ic-cdk 0.17.2",
  "ic-stable-structures",
  "ic_siwe",
