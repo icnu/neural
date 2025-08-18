@@ -8,6 +8,7 @@ import { mainnet, sepolia } from 'wagmi/chains';
 import { metaMask } from 'wagmi/connectors';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Ed25519KeyIdentity } from "@dfinity/identity";
+import { createActor } from "@/declarations/identity_canister";
 
 type IdentityContextType = {
     identity: SignIdentity | undefined;
@@ -52,8 +53,15 @@ function IdentityProviderInner({ children }: { children: ReactNode }) {
 
         if ( type == 'metamask' ) {
             const result = await connectAsync({ connector: metaMask() });
-            // fetch sign message
-            // signMessageAsync
+            if ( result.accounts.length > 0 ) {
+                const actor = createActor(process.env.NEXT_PUBLIC_CANISTER_ID_IDENTITY_CANISTER!, {
+                    agentOptions: { host: 'http://localhost:4943' }
+                });
+                const loginMessage = await actor.get_login_message(result.accounts[0]);
+                const signature = await signMessageAsync({ account: result.accounts[0], message: loginMessage });
+
+                await actor.login(result.accounts[0], signature);
+            }
 
             setIsConnecting(false);
         } else {

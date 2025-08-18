@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Montserrat } from "next/font/google"
 import "./globals.css"
-import SiweProviderWrapper from "@/components/siwe-provider";
+import { IdentityProvider } from "@/components/identity-provider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,9 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable} antialiased`}>
       <body className="font-sans">
-        <SiweProviderWrapper>
+        <IdentityProvider>
           {children}
-        </SiweProviderWrapper>
+        </IdentityProvider>
       </body>
     </html>
   )

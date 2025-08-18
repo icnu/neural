@@ -13,38 +13,19 @@ import {
 import { Wallet, LogOut } from "lucide-react"
 import { useSiwe } from "ic-siwe-js/react"
 import { useAccount, useConnect } from "wagmi"
-
-interface WalletUser {
-  address: string
-  method: "metamask" | "internet-identity"
-}
+import { useIdentityProvider } from "./identity-provider"
 
 export function Header() {
+  const { login, identity, isLoggedIn, isLoggingIn } = useIdentityProvider();
   const [isLoginOpen, setIsLoginOpen] = useState(false)
-  const { connectors, connect } = useConnect();
-  const { isConnected } = useAccount();
-  const { login, identity } = useSiwe();
-  const user = identity ? { address: identity.getPrincipal().toString(), method: 'internet-identity' } : null;
-  
-  useEffect(() => {
-    if ( isConnected && !identity ) {
-      login();
-    }
-  }, [isConnected, identity])
+  const user = isLoggedIn && identity ? identity.getPrincipal().toString() : undefined;
 
   const connectMetaMask = async () => {
-    connect({ connector: connectors[0] });
+    login('metamask');
   }
 
   const connectInternetIdentity = async () => {
-    // Placeholder for Internet Identity integration
-    // In a real implementation, you would integrate with @dfinity/auth-client
-    // const mockPrincipal = "rdmx6-jaaaa-aaaah-qcaiq-cai"
-    // setUser({
-    //   address: mockPrincipal,
-    //   method: "internet-identity",
-    // })
-    // setIsLoginOpen(false)
+    login('internet-identity');
   }
 
   const disconnect = () => {
@@ -83,10 +64,10 @@ export function Header() {
               <div className="flex items-center space-x-2">
                 <div className="flex items-center space-x-2 bg-muted px-3 py-2 rounded-lg">
                   <Wallet className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-foreground">{formatAddress(user.address)}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-sm text-foreground">{formatAddress(user)}</span>
+                  {/* <span className="text-xs text-muted-foreground">
                     ({user.method === "metamask" ? "MetaMask" : "II"})
-                  </span>
+                  </span> */}
                 </div>
                 <Button
                   variant="outline"
