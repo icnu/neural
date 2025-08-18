@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuthClient } from '@dfinity/use-auth-client';
 import { SiweIdentityProvider } from "ic-siwe-js/react"
 import { ReactNode } from "react"
 import { createConfig, http, WagmiProvider } from 'wagmi'
@@ -22,7 +23,7 @@ export default function SiweProviderWrapper({ children }: { children: ReactNode 
     return (
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                <SiweIdentityProvider canisterId="aaaa-aa">
+                <SiweIdentityProvider canisterId={process.env.NEXT_PUBLIC_CANISTER_ID_IC_SIWE_PROVIDER!}>
                     {children}
                 </SiweIdentityProvider>
             </QueryClientProvider>

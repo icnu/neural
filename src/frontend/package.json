@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@dfinity/agent": "^2.4.1",
+    "@dfinity/auth-client": "^3.2.1",
     "@dfinity/candid": "^2.4.1",
     "@dfinity/identity": "^2.4.1",
+    "@dfinity/use-auth-client": "^3.2.1",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.7",

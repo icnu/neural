@@ -39,16 +39,16 @@ export function Header() {
   const connectInternetIdentity = async () => {
     // Placeholder for Internet Identity integration
     // In a real implementation, you would integrate with @dfinity/auth-client
-    const mockPrincipal = "rdmx6-jaaaa-aaaah-qcaiq-cai"
-    setUser({
-      address: mockPrincipal,
-      method: "internet-identity",
-    })
-    setIsLoginOpen(false)
+    // const mockPrincipal = "rdmx6-jaaaa-aaaah-qcaiq-cai"
+    // setUser({
+    //   address: mockPrincipal,
+    //   method: "internet-identity",
+    // })
+    // setIsLoginOpen(false)
   }
 
   const disconnect = () => {
-    setUser(null)
+    // setUser(null)
   }
 
   const formatAddress = (address: string) => {
