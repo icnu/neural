@@ -5,6 +5,7 @@ members = [
     "src/registry_canister",
     "src/token_index_canister",
     "src/vote_canister",
+    "src/identity_canister",
     "src/common"
 ]
 resolver = "2"
