@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -11,6 +11,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Wallet, LogOut } from "lucide-react"
+import { useSiwe } from "ic-siwe-js/react"
+import { useAccount, useConnect } from "wagmi"
 
 interface WalletUser {
   address: string
@@ -18,26 +20,20 @@ interface WalletUser {
 }
 
 export function Header() {
-  const [user, setUser] = useState<WalletUser | null>(null)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const { connectors, connect } = useConnect();
+  const { isConnected } = useAccount();
+  const { login, identity } = useSiwe();
+  const user = identity ? { address: identity.getPrincipal().toString(), method: 'internet-identity' } : null;
+  
+  useEffect(() => {
+    if ( isConnected && !identity ) {
+      login();
+    }
+  }, [isConnected, identity])
 
   const connectMetaMask = async () => {
-    try {
-      if (typeof window.ethereum !== "undefined") {
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        })
-        setUser({
-          address: accounts[0],
-          method: "metamask",
-        })
-        setIsLoginOpen(false)
-      } else {
-        alert("MetaMask is not installed. Please install MetaMask to continue.")
-      }
-    } catch (error) {
-      console.error("Error connecting to MetaMask:", error)
-    }
+    connect({ connector: connectors[0] });
   }
 
   const connectInternetIdentity = async () => {

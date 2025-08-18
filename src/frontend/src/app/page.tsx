@@ -66,7 +66,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {mockDAOs.length > 0 ? (
+          {/* {mockDAOs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {mockDAOs.map((dao) => (
                 <DAOCard key={dao.id} dao={dao} />
@@ -88,7 +88,7 @@ export default function HomePage() {
                 </Button>
               </Link>
             </div>
-          )}
+          )} */}
         </div>
       </main>
     </div>
