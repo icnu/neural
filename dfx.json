@@ -22,8 +22,8 @@
       "type": "rust"
     },
     "token_index_canister": {
-      "candid": "src/hub_canister/canister.did",
-      "package": "hub_canister",
+      "candid": "src/token_index_canister/canister.did",
+      "package": "token_index_canister",
       "type": "rust"
     },
     "registry_canister": {
