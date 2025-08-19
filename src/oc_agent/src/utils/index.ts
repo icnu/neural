@@ -36,5 +36,5 @@ export function displayFormatHexString(hex: string): string {
 }
 
 export function loadIdentity(): Ed25519KeyIdentity {
-  return Ed25519KeyIdentity.fromJSON(JSON.stringify(fsIdentityJson));
+  return Ed25519KeyIdentity.fromParsedJson(fsIdentityJson.key as any);
 }

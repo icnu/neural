@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyPluginCallback, RouteHandlerMethod, RouteShorthandOptions } from "fastify";
 import { User } from "./user";
+import { TokenIndex } from "./token_index";
 
 export type Route = {
     path: string,
@@ -9,7 +10,8 @@ export type Route = {
 };
 
 const _routes: Route[] = [
-    ...User.routes
+    ...User.routes,
+    ...TokenIndex.routes
 ];
 
 export const router: FastifyPluginCallback<{}> = (server: FastifyInstance) => {

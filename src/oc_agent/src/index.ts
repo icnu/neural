@@ -40,12 +40,13 @@ async function initServer(): Promise<FastifyInstance> {
 
 async function start() {
   try {
-    init_encrypted_maps();
-    await SnsAggregatorService.init();
+    // init_encrypted_maps();
+    // await SnsAggregatorService.init();
 
-    const client = await initDiscord();
+    // const client = await initDiscord();
     const server = await initServer();
   } catch (err) {
+    console.log(err);
     process.exit(1)
   }
 }
