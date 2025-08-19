@@ -37,25 +37,38 @@ const queryClient = new QueryClient();
 const storage = new IdbStorage();
 const KEY_EPHEMERAL_SIGN_IDENTITY = 'neural_sign_identity';
 
+function generateEphemeralIdentity(): Ed25519KeyIdentity {
+    return Ed25519KeyIdentity.generate();
+}
+
+async function saveIdentity(identity: Ed25519KeyIdentity) {
+    const json = JSON.stringify(identity.toJSON());
+    await storage.set(KEY_EPHEMERAL_SIGN_IDENTITY, json);
+}
+
+async function loadIdentity(): Promise<Ed25519KeyIdentity | undefined> {
+    let json = await storage.get(KEY_EPHEMERAL_SIGN_IDENTITY);
+    return json ? Ed25519KeyIdentity.fromJSON(json) : undefined;
+}
+
 function IdentityProviderInner({ children }: { children: ReactNode }) {
-    const { connectAsync, isPending, isSuccess } = useConnect();
-    const { address } = useAccount();
+    const { connectAsync } = useConnect();
     const { signMessageAsync } = useSignMessage();
+
     const [ isConnecting, setIsConnecting ] = useState<boolean>(false);
-    const [ ii, setII ] = useState<{ client: AuthClient, isAuthenticated: boolean} | undefined>(undefined);
     const [ identity, setIdentity ] = useState<Ed25519KeyIdentity | undefined>(undefined);
 
-    const isLoggedIn = !!((isSuccess && address) || ii?.isAuthenticated);
+    const isLoggedIn = !!identity;
 
     const login = useCallback(async (type: 'metamask' | 'internet-identity') => {
-        if ( !identity ) return;
         setIsConnecting(true);
+        let identity_ = identity ? identity : generateEphemeralIdentity();
 
         if ( type == 'metamask' ) {
             const result = await connectAsync({ connector: metaMask() });
             if ( result.accounts.length > 0 ) {
                 const actor = createActor(process.env.NEXT_PUBLIC_CANISTER_ID_IDENTITY_CANISTER!, {
-                    agentOptions: { host: 'http://localhost:4943' }
+                    agentOptions: { host: 'http://localhost:4943', identity: identity_ }
                 });
                 const loginMessage = await actor.get_login_message(result.accounts[0]);
                 const signature = await signMessageAsync({ account: result.accounts[0], message: loginMessage });
@@ -65,38 +78,27 @@ function IdentityProviderInner({ children }: { children: ReactNode }) {
 
             setIsConnecting(false);
         } else {
-            if ( !ii ) return;
+            const authClient = await AuthClient.create({
+                keyType: "Ed25519",
+                storage,
+                identity: identity_,
+            });
 
-            await ii.client.login({
+            await authClient.login({
                 identityProvider: "https://identity.ic0.app/",
                 onSuccess: async () => {
-                    setII({ client: ii.client, isAuthenticated: await ii.client.isAuthenticated() });
+                    if (!identity) saveIdentity(identity_);
                     setIsConnecting(false);
                 },
             });
         }
-    }, [identity, setIsConnecting, connectAsync, ii, setII, signMessageAsync]);
+
+        if (!identity) saveIdentity(identity_);
+    }, [identity, setIsConnecting, connectAsync, signMessageAsync]);
 
     const init = async () => {
-        let identity: Ed25519KeyIdentity;
-        const existingIdentity = await storage.get(KEY_EPHEMERAL_SIGN_IDENTITY);
-        if (!existingIdentity) {
-            identity = Ed25519KeyIdentity.generate();
-            const json = JSON.stringify(identity.toJSON());
-            await storage.set(KEY_EPHEMERAL_SIGN_IDENTITY, json);
-        } else {
-            identity = Ed25519KeyIdentity.fromJSON(existingIdentity);
-        }
-
-        const authClient = await AuthClient.create({
-            keyType: "Ed25519",
-            storage,
-            identity: identity,
-        });
-        const isAuthenticated = await authClient.isAuthenticated();
-
-        setII({ client: authClient, isAuthenticated });
-        setIdentity(identity);
+        const identity_ = await loadIdentity();
+        if (identity_) setIdentity(identity_);
     }
 
     useEffect(() => {
