@@ -13,6 +13,7 @@ import { createActor } from "@/declarations/identity_canister";
 type IdentityContextType = {
     identity: SignIdentity | undefined;
     login: (type: 'metamask' | 'internet-identity') => void;
+    logout: () => void;
     isLoggingIn: boolean;
     isLoggedIn: boolean;
 };
@@ -20,6 +21,7 @@ type IdentityContextType = {
 const IdentityContext = createContext<IdentityContextType>({
     identity: undefined,
     login: (type: 'metamask' | 'internet-identity') => {},
+    logout: () => {},
     isLoggedIn: false,
     isLoggingIn: false
 });
@@ -49,6 +51,10 @@ async function saveIdentity(identity: Ed25519KeyIdentity) {
 async function loadIdentity(): Promise<Ed25519KeyIdentity | undefined> {
     let json = await storage.get(KEY_EPHEMERAL_SIGN_IDENTITY);
     return json ? Ed25519KeyIdentity.fromJSON(json) : undefined;
+}
+
+async function resetIdentity() {
+    await storage.remove(KEY_EPHEMERAL_SIGN_IDENTITY);
 }
 
 function IdentityProviderInner({ children }: { children: ReactNode }) {
@@ -94,7 +100,13 @@ function IdentityProviderInner({ children }: { children: ReactNode }) {
         }
 
         if (!identity) saveIdentity(identity_);
+        setIdentity(identity_);
     }, [identity, setIsConnecting, connectAsync, signMessageAsync]);
+
+    const logout = useCallback(async () => {
+        await resetIdentity();
+        setIdentity(undefined);
+    }, [setIdentity]);
 
     const init = async () => {
         const identity_ = await loadIdentity();
@@ -110,6 +122,7 @@ function IdentityProviderInner({ children }: { children: ReactNode }) {
             value={{
                 identity,
                 login,
+                logout,
                 isLoggingIn: isConnecting,
                 isLoggedIn
             }}

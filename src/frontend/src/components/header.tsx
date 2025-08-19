@@ -11,12 +11,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Wallet, LogOut } from "lucide-react"
-import { useSiwe } from "ic-siwe-js/react"
-import { useAccount, useConnect } from "wagmi"
 import { useIdentityProvider } from "./identity-provider"
 
 export function Header() {
-  const { login, identity, isLoggedIn, isLoggingIn } = useIdentityProvider();
+  const { login, identity, isLoggedIn, logout } = useIdentityProvider();
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const user = isLoggedIn && identity ? identity.getPrincipal().toString() : undefined;
 
@@ -29,7 +27,7 @@ export function Header() {
   }
 
   const disconnect = () => {
-    // setUser(null)
+    logout();
   }
 
   const formatAddress = (address: string) => {
