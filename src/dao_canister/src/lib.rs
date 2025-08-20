@@ -33,6 +33,11 @@ async fn get_proposal(id: u64) -> Option<Proposal> {
     proposals::get_proposal(id)
 }
 
+#[update]
+async fn get_execution_address() -> String {
+    execution::get_address().await
+}
+
 #[query]
 fn get_metadata() -> Metadata {
     metadata::get_metadata()

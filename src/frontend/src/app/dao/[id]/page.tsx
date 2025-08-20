@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Users, FileText, Plus, ArrowLeft, Clock, CheckCircle, XCircle } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { createActor } from "@/declarations/dao_canister";
 
 // Mock data for demonstration
 const mockDAOs = {
@@ -79,6 +80,11 @@ const mockProposals = [
     },
   },
 ]
+
+async function loadDAODetails(canister: string) {
+  const daoActor = createActor(canister);
+  const metadata = daoActor.get_metadata();
+}
 
 function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
   const getStatusIcon = (status: string) => {
@@ -228,7 +234,7 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
                   <p className="text-sm font-mono text-card-foreground">
                     {dao.multisigAddress.slice(0, 6)}...{dao.multisigAddress.slice(-4)}
                   </p>
-                  <p className="text-sm text-muted-foreground">Multisig Address</p>
+                  <p className="text-sm text-muted-foreground">Execution Address</p>
                 </div>
               </div>
             </div>
