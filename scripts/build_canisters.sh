@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source .env
+
 function build_canister {
     local canister=$1
     local canister_wasm="target/wasm32-unknown-unknown/debug/$canister.wasm"
