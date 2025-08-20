@@ -172,7 +172,7 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
           {/* Back Navigation */}
           <Link href="/" className="inline-flex items-center text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Active DAOs
+            Back
           </Link>
 
           {/* DAO Header */}
