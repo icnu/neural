@@ -23,7 +23,7 @@ interface DAOFormData {
   votingAlgorithm: string
 }
 
-const votingAlgorithms = ["Simple Majority", "Quadratic Voting", "Weighted Voting", "Conviction Voting"]
+const votingAlgorithms = ["Simple Majority"]
 
 export default function CreateDAOPage() {
   const router = useRouter()
@@ -134,17 +134,6 @@ export default function CreateDAOPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="description">Description *</Label>
-                      <Textarea
-                        id="description"
-                        placeholder="Describe your DAO's mission and goals..."
-                        rows={4}
-                        value={formData.description}
-                        onChange={(e) => updateFormData("description", e.target.value)}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
                       <Label htmlFor="logo">DAO Logo</Label>
                       <div className="flex items-center space-x-4">
                         <div className="w-16 h-16 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
@@ -223,25 +212,34 @@ export default function CreateDAOPage() {
                   <CardDescription>Pay the creation fee to deploy your DAO</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
+                    <h5 className="font-medium text-foreground mb-3">Send Payment To:</h5>
+                    <div className="flex items-center justify-between bg-background border rounded-lg p-3">
+                      <code className="text-sm font-mono text-foreground">63a2a5cbfebfc61f469a51d5b167a42fa387374b14370a4837...</code>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigator.clipboard.writeText("63a2a5cbfebfc61f469a51d5b167a42fa387374b14370a48371b308f2361d4b3")}
+                      >
+                        Copy
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Send exactly 100.0 ICP to this address to complete DAO creation
+                    </p>
+                  </div>
+
                   <div className="p-6 bg-muted rounded-lg">
                     <h4 className="font-medium text-foreground mb-4">DAO Creation Fee</h4>
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">DAO Setup & Deployment:</span>
-                        <span>5.0 ICP</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Multisig Creation:</span>
-                        <span>2.0 ICP</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Platform Fee:</span>
-                        <span>1.0 ICP</span>
+                        <span className="text-muted-foreground">DAO Stake:</span>
+                        <span>100.0 ICP</span>
                       </div>
                       <hr className="border-border" />
                       <div className="flex justify-between font-medium">
                         <span>Total:</span>
-                        <span>8.0 ICP</span>
+                        <span>100.0 ICP</span>
                       </div>
                     </div>
                   </div>

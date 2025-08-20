@@ -42,4 +42,9 @@ fn get_vote_canister_wasm() -> Wasm {
     wasm::get_vote_canister_wasm()
 }
 
+#[query]
+fn list_daos() -> Vec<Principal> {
+    dao::list_daos()
+}
+
 export_candid!();

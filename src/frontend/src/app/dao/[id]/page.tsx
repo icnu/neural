@@ -16,7 +16,7 @@ const mockDAOs = {
     name: "DeFi Governance DAO",
     description:
       "A decentralized autonomous organization focused on governing DeFi protocols and making strategic decisions for the ecosystem. We aim to create a more transparent and community-driven approach to DeFi governance.",
-    logo: "/defi-dao-logo.png",
+    logo: "/placeholder.png",
     memberCount: 1247,
     proposalCount: 23,
     votingPower: "1,250 DEFI",
@@ -135,7 +135,7 @@ function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
               <span className="font-medium">{votePercentage.toFixed(1)}% For</span>
             </div>
             <div className="w-full bg-muted rounded-full h-2">
-              <div className="bg-accent h-2 rounded-full transition-all" style={{ width: `${votePercentage}%` }} />
+              <div className="bg-chart-2 h-2 rounded-full transition-all" style={{ width: `${votePercentage}%` }} />
             </div>
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>{proposal.votesFor.toLocaleString()} For</span>
@@ -144,10 +144,6 @@ function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
           </div>
 
           <div className="flex items-center space-x-2 pt-2">
-            <Avatar className="w-6 h-6">
-              <AvatarImage src={proposal.proposer.avatar || "/placeholder.svg"} />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
             <span className="text-sm text-muted-foreground">by {proposal.proposer.address}</span>
           </div>
         </CardContent>
@@ -183,10 +179,6 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
                     src={dao.logo || "/placeholder.svg"}
                     alt={`${dao.name} logo`}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.src = `/placeholder.svg?height=64&width=64&query=${encodeURIComponent(dao.name + " logo")}`
-                    }}
                   />
                 </div>
                 <div>
@@ -201,14 +193,12 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
               </Link>
             </div>
 
-            <p className="text-muted-foreground mb-6">{dao.description}</p>
-
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="flex items-center space-x-3">
                 <Users className="w-5 h-5 text-muted-foreground" />
                 <div>
                   <p className="text-lg font-semibold text-card-foreground">{dao.memberCount.toLocaleString()}</p>
-                  <p className="text-sm text-muted-foreground">Members</p>
+                  <p className="text-sm text-muted-foreground">Total Supply</p>
                 </div>
               </div>
 
@@ -226,7 +216,7 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
                 </div>
                 <div>
                   <p className="text-lg font-semibold text-card-foreground">{dao.votingPower}</p>
-                  <p className="text-sm text-muted-foreground">Your Voting Power</p>
+                  <p className="text-sm text-muted-foreground">Your Balance</p>
                 </div>
               </div>
 

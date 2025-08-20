@@ -18,6 +18,9 @@ impl Service {
   pub async fn get_vote_canister_wasm(&self) -> Result<(serde_bytes::ByteBuf,)> {
     ic_cdk::call(self.0, "get_vote_canister_wasm", ()).await
   }
+  pub async fn list_daos(&self) -> Result<(Vec<Principal>,)> {
+    ic_cdk::call(self.0, "list_daos", ()).await
+  }
   pub async fn request_new_dao(&self) -> Result<(Account,)> {
     ic_cdk::call(self.0, "request_new_dao", ()).await
   }

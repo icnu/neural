@@ -19,6 +19,23 @@ fn increment_dao_id() {
     DAO_ID.with_borrow_mut(|cell| cell.set(cell.get() + 1).unwrap());
 }
 
+pub fn list_daos() -> Vec<Principal> {
+    DAO_STORE.with_borrow(|map| {
+        let mut daos = vec![];
+        for i in 0..get_next_dao_id() {
+            let dao = map.get(&i);
+            if dao.is_some() {
+                let canister = dao.unwrap().canister;
+                if canister.is_some() {
+                    daos.push(canister.unwrap());
+                }
+            }
+        }
+
+        daos
+    })
+}
+
 pub fn request_new_dao(creator: Principal) -> u64 {
     let dao_id = get_next_dao_id();
 

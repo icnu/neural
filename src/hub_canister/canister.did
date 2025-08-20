@@ -2,6 +2,7 @@ type Account = record { owner : principal; subaccount : opt blob };
 service : {
   complete_payment : (nat64) -> (principal);
   get_vote_canister_wasm : () -> (blob) query;
+  list_daos : () -> (vec principal) query;
   request_new_dao : () -> (Account);
   set_dao_canister_wasm : (blob) -> ();
   set_vote_canister_wasm : (blob) -> ();

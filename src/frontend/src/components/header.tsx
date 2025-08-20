@@ -45,16 +45,10 @@ export function Header() {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">DAO</span>
             </div>
-            <h1 className="text-xl font-bold text-foreground">DAOManager</h1>
+            <h1 className="text-xl font-bold text-foreground">Neural</h1>
           </div>
 
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="/" className="text-foreground hover:text-accent transition-colors">
-              Home
-            </a>
-            <a href="/create-dao" className="text-foreground hover:text-accent transition-colors">
-              Create DAO
-            </a>
           </nav>
 
           <div className="flex items-center space-x-4">

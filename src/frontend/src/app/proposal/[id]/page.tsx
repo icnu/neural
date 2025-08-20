@@ -19,6 +19,7 @@ import {
   ExternalLink,
   Users,
   Calendar,
+  StopCircle,
 } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -73,6 +74,8 @@ Our current staking rewards of 8% have been in place for 6 months. During this t
     },
     userVotingPower: "1,250 DEFI",
     userHasVoted: false,
+    userVote: "for" as const,
+    executionTxHash: "0x8f7e6d5c4b3a2918f7e6d5c4b3a2918f7e6d5c4b3a2918f7e6d5c4b3a291",
   },
   "2": {
     id: "2",
@@ -119,6 +122,7 @@ This diversification will reduce our exposure to single-token risk while maintai
     userVotingPower: "1,250 DEFI",
     userHasVoted: true,
     userVote: "for" as const,
+    executionTxHash: "0x8f7e6d5c4b3a2918f7e6d5c4b3a2918f7e6d5c4b3a2918f7e6d5c4b3a291",
   },
 }
 
@@ -182,8 +186,47 @@ function ExecutionDetails({ execution }: { execution: (typeof mockProposals)["1"
   )
 }
 
+function ExecutionStatus({ txHash }: { txHash: string }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center space-x-2">
+          <CheckCircle className="w-5 h-5 text-green-600" />
+          <span>Execution Complete</span>
+        </CardTitle>
+        <CardDescription>This proposal has been executed successfully</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div>
+          <label className="text-sm font-medium text-muted-foreground">Transaction Hash</label>
+          <div className="mt-1 space-y-2">
+            <code className="bg-muted px-2 py-1 rounded text-sm font-mono block break-all">
+              {txHash.slice(0, 20)}...{txHash.slice(-20)}
+            </code>
+            <Button variant="ghost" size="sm" asChild className="w-full">
+              <a
+                href={`https://etherscan.io/tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center space-x-1"
+              >
+                <ExternalLink className="w-3 h-3" />
+                <span className="text-xs">View on Explorer</span>
+              </a>
+            </Button>
+          </div>
+        </div>
+        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+          <p className="text-sm text-green-800">✓ Transaction confirmed and executed successfully</p>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function ProposalPage({ params }: { params: { id: string } }) {
   const [isVoting, setIsVoting] = useState(false)
+  const [isClosingVoting, setIsClosingVoting] = useState(false)
   const proposal = mockProposals[params.id as keyof typeof mockProposals]
 
   if (!proposal) {
@@ -202,6 +245,15 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
     setIsVoting(false)
     // In a real app, this would update the proposal data
     console.log(`[v0] Voted ${voteType} on proposal ${proposal.id}`)
+  }
+
+  const handleCloseVoting = async () => {
+    setIsClosingVoting(true)
+    // Simulate closing voting process
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    setIsClosingVoting(false)
+    console.log(`[v0] Closed voting for proposal ${proposal.id}`)
+    // In a real app, this would update the proposal status
   }
 
   const getStatusIcon = (status: string) => {
@@ -262,22 +314,17 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={proposal.proposer.avatar || "/placeholder.svg"} />
-                <AvatarFallback>
-                  {proposal.proposer.name
-                    ?.split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="text-sm font-medium">{proposal.proposer.name}</p>
-                <p className="text-xs text-muted-foreground">{proposal.proposer.address}</p>
-              </div>
+              {isActive && (
+                <Button
+                  onClick={handleCloseVoting}
+                  disabled={isClosingVoting}
+                  variant="outline"
+                  className="border-orange-200 text-orange-600 hover:bg-orange-50 bg-transparent"
+                >
+                  <StopCircle className="w-4 h-4 mr-2" />
+                  {isClosingVoting ? "Closing..." : "Close Voting (Demo)"}
+                </Button>
+              )}
             </div>
           </div>
 
@@ -342,7 +389,6 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                 <CardContent>
                   <div className="text-center">
                     <p className="text-2xl font-bold text-foreground">{proposal.userVotingPower}</p>
-                    <p className="text-sm text-muted-foreground">Available to vote</p>
                   </div>
                 </CardContent>
               </Card>
@@ -352,7 +398,6 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                 <CardHeader>
                   <CardTitle>Voting Results</CardTitle>
                   <CardDescription>
-                    {proposal.totalVotes.toLocaleString()} of {proposal.quorum.toLocaleString()} required votes
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -380,12 +425,13 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                       <span className="font-medium">{quorumPercentage.toFixed(1)}%</span>
                     </div>
                     <Progress value={quorumPercentage} className="h-2" />
-                    <p className="text-xs text-muted-foreground">
-                      {hasQuorum ? "✓ Quorum reached" : "Quorum not yet reached"}
-                    </p>
                   </div>
                 </CardContent>
               </Card>
+              
+              {proposal.status === "passed" && "executionTxHash" in proposal && (
+                <ExecutionStatus txHash={proposal.executionTxHash} />
+              )}
 
               {/* Voting Actions */}
               {isActive && !proposal.userHasVoted && (

@@ -17,4 +17,6 @@ service : (InitArgs) -> {
   cast_vote : (ProposalVerdict) -> ();
   close_vote : () -> ();
   get_metadata : () -> (VoteMetadata) query;
+  get_voting_power : () -> (nat) query;
+  has_cast_vote : () -> (bool) query;
 }
