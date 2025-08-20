@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -23,6 +23,10 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Identity } from "@dfinity/agent"
+import { createActor as createVoteActor } from "@/declarations/vote_canister"
+import { createActor as createDaoActor } from "@/declarations/dao_canister"
+import { useIdentityProvider } from "@/components/identity-provider"
 
 // Mock data for demonstration
 const mockProposals = {
@@ -126,7 +130,76 @@ This diversification will reduce our exposure to single-token risk while maintai
   },
 }
 
-function ExecutionDetails({ execution }: { execution: (typeof mockProposals)["1"]["execution"] }) {
+type Proposal = {
+  dao: string,
+  id: string,
+  title: string,
+  description: string,
+  status: 'passed' | 'rejected' | 'active',
+  votesFor: bigint,
+  votesAgainst: bigint,
+  totalVotes: bigint,
+  quorum: bigint,
+  execution: {
+    contract: string,
+    function: string,
+    parameters: {name: string, type: string, value: string}[],
+    estimatedGas: string,
+    value: string
+  },
+  votingPower: bigint,
+  userHasVoted: boolean,
+  executionTxnHash: string,
+}
+
+async function loadProposal(id: string, identity: Identity): Promise<Proposal | undefined> {
+  const actor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity } });
+  const voteData = await actor.get_metadata();
+  const metadata = await createDaoActor(voteData.dao_canister).get_proposal(voteData.proposal_id);
+  const votingPower = await actor.get_voting_power();
+  const hasCastVote = await actor.has_cast_vote();
+  if ( metadata.length == 0 ) return;
+
+  let isVotingClosed = 'VotingClosed' in metadata[0].state;
+  let isVoteAccepted = metadata[0].verdict[0] ? 'ACCEPTED' in metadata[0].verdict[0] : false;
+
+  return {
+    dao: voteData.dao_canister,
+    id,
+    title: metadata[0].title,
+    description: metadata[0].description,
+    status: isVotingClosed ? (isVoteAccepted ? 'passed' : 'rejected') : 'active',
+    votesFor: voteData.vote_accept,
+    votesAgainst: voteData.vote_reject,
+    totalVotes: votingPower,
+    quorum: votingPower,
+    execution: {
+      contract: metadata[0].execution_payload[0]?.to ?? '',
+      function: 'mint',
+      parameters: [
+        { name: 'to', type: 'address', value: '' },
+        { name: 'amount', type: 'uint256', value: '200' }
+      ],
+      estimatedGas: "45,000",
+      value: "0 ETH",
+    },
+    votingPower,
+    userHasVoted: hasCastVote,
+    executionTxnHash: metadata[0].execution_txn_hash[0] ?? ''
+  }
+}
+
+async function castVote(id: string, identity: Identity, vote: 'for' | 'against') {
+  const actor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity } });
+  await actor.cast_vote(vote === 'for' ? {ACCEPTED: null} : {REJECTED: null});
+}
+
+async function closeVote(id: string, identity: Identity) {
+  const actor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity } });
+  await actor.close_vote();
+}
+
+function ExecutionDetails({ execution }: { execution: Proposal['execution'] }) {
   return (
     <Card>
       <CardHeader>
@@ -225,36 +298,42 @@ function ExecutionStatus({ txHash }: { txHash: string }) {
 }
 
 export default function ProposalPage({ params }: { params: { id: string } }) {
+  const { identity } = useIdentityProvider();
+  const [ proposal, setProposal ] = useState<Proposal | undefined>(undefined);
   const [isVoting, setIsVoting] = useState(false)
   const [isClosingVoting, setIsClosingVoting] = useState(false)
-  const proposal = mockProposals[params.id as keyof typeof mockProposals]
+  
+  useEffect(() => {
+    if ( !identity ) return;
+    loadProposal(params.id, identity).then(v => setProposal(v))
+  }, [identity]);
 
-  if (!proposal) {
-    notFound()
-  }
+  if ( !identity ) return <></>;
+  if (!proposal) return <></>;
 
-  const votePercentage = proposal.totalVotes > 0 ? (proposal.votesFor / proposal.totalVotes) * 100 : 0
-  const quorumPercentage = proposal.totalVotes > 0 ? (proposal.totalVotes / proposal.quorum) * 100 : 0
+  const votesFor = Number.parseInt(proposal.votesFor.toString());
+  const totalVotes = Number.parseInt(proposal.totalVotes.toString());
+  const quorum = Number.parseInt(proposal.quorum.toString());
+  const votePercentage = proposal.totalVotes > 0 ? (votesFor / totalVotes) * 100 : 0
+  const quorumPercentage = proposal.totalVotes > 0 ? (totalVotes / quorum) * 100 : 0
   const isActive = proposal.status === "active"
-  const hasQuorum = proposal.totalVotes >= proposal.quorum
 
-  const handleVote = async (voteType: "for" | "against") => {
+  const handleVote = useCallback(async (voteType: "for" | "against") => {
     setIsVoting(true)
-    // Simulate voting process
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await castVote(params.id, identity, voteType);
     setIsVoting(false)
-    // In a real app, this would update the proposal data
-    console.log(`[v0] Voted ${voteType} on proposal ${proposal.id}`)
-  }
+    
+    loadProposal(params.id, identity).then(v => setProposal(v))
+  }, [identity]);
 
-  const handleCloseVoting = async () => {
+  const handleCloseVoting = useCallback(async () => {
     setIsClosingVoting(true)
-    // Simulate closing voting process
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await closeVote(params.id, identity);
     setIsClosingVoting(false)
     console.log(`[v0] Closed voting for proposal ${proposal.id}`)
-    // In a real app, this would update the proposal status
-  }
+    
+    loadProposal(params.id, identity).then(v => setProposal(v))
+  }, [identity]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -382,7 +461,7 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-foreground">{proposal.userVotingPower}</p>
+                    <p className="text-2xl font-bold text-foreground">{proposal.votingPower}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -424,7 +503,7 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
               </Card>
               
               {proposal.status === "passed" && "executionTxHash" in proposal && (
-                <ExecutionStatus txHash={proposal.executionTxHash} />
+                <ExecutionStatus txHash={proposal.executionTxnHash} />
               )}
 
               {/* Voting Actions */}
@@ -466,17 +545,12 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                     <div className="text-center">
                       <Badge
                         className={
-                          proposal.userVote === "for" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                          "bg-green-100 text-green-800"
                         }
                       >
-                        {proposal.userVote === "for" ? (
-                          <ThumbsUp className="w-3 h-3 mr-1" />
-                        ) : (
-                          <ThumbsDown className="w-3 h-3 mr-1" />
-                        )}
-                        Voted {proposal.userVote}
+                        <ThumbsUp className="w-3 h-3 mr-1" />
                       </Badge>
-                      <p className="text-sm text-muted-foreground mt-2">You voted with {proposal.userVotingPower}</p>
+                      <p className="text-sm text-muted-foreground mt-2">You voted with {proposal.votingPower}</p>
                     </div>
                   </CardContent>
                 </Card>

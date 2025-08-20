@@ -52,11 +52,14 @@ async function loadDAO(canister: string, identity: Identity): Promise<DAO> {
     if ( votingPower == BigInt(0) )
       votingPower = await voteActor.get_voting_power();
 
+    let isVotingClosed = 'VotingClosed' in proposal[0].state;
+    let isVoteAccepted = proposal[0].verdict[0] ? 'ACCEPTED' in proposal[0].verdict[0] : false;
+
     proposals.push({
       id: proposal[0].vote_canister[0]!,
       title: proposal[0].title,
       description: proposal[0].description,
-      status: proposal[0].execution_txn_hash[0] ? 'passed' : 'active',
+      status: isVotingClosed ? (isVoteAccepted ? 'passed' : 'rejected') : 'active',
       votesFor: voteData.vote_accept,
       votesAgainst: voteData.vote_reject,
       totalVotes: votingPower,
