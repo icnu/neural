@@ -20,7 +20,7 @@ pub async fn deploy_vote_canister(init_args: InitArgs) -> Principal {
                 wasm_memory_limit: None,
             }),
         },
-        20_000_000_000 // 20B
+        2_000_000_000_000 // 1T
     ).await.unwrap().0.canister_id;
 
     install_code(InstallCodeArgument {

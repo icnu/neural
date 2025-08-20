@@ -14,6 +14,14 @@ pub struct Metadata {
     pub token: Option<Principal>
 }
 
+#[derive(CandidType, Deserialize, Clone)]
+pub struct MetadataUpdate {
+    pub name: String,
+    pub logo: String,
+    pub url: String,
+    pub token: Principal
+}
+
 impl Storable for Metadata {
     fn to_bytes(&self) -> Cow<[u8]> {
         Cow::Owned(Encode!(self).expect("Failed to encode Metadata"))
@@ -23,7 +31,7 @@ impl Storable for Metadata {
         Decode!(bytes.as_ref(), Metadata).expect("Failed to decode Metadata")
     }
     
-    const BOUND: Bound = Bound::Bounded { max_size: 256, is_fixed_size: true };
+    const BOUND: Bound = Bound::Bounded { max_size: 256, is_fixed_size: false };
 }
 
 #[derive(CandidType, Deserialize)]
@@ -43,6 +51,13 @@ impl Metadata {
             creator: init_args.creator,
             token: None,
         }
+    }
+
+    pub fn populate(&mut self, update: MetadataUpdate) {
+        self.name = Some(update.name);
+        self.logo = Some(update.logo);
+        self.url = Some(update.url);
+        self.token = Some(update.token);
     }
 
     pub fn default() -> Self {

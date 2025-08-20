@@ -1,8 +1,8 @@
 use std::cell::RefCell;
 use candid::Principal;
 use ic_stable_structures::Cell;
-pub use types::{Metadata, InitArgs};
-use crate::memory::{id_to_memory, Memory, MemoryIds};
+pub use types::{Metadata, InitArgs, MetadataUpdate};
+use crate::{memory::{id_to_memory, Memory, MemoryIds}};
 
 mod types;
 
@@ -12,6 +12,14 @@ thread_local! {
 
 pub fn init_metadata(args: InitArgs, hub: Principal) {
     METADATA.with_borrow_mut(|cell| cell.set(Metadata::new(args, hub)).unwrap());
+}
+
+pub fn update_metadata(args: MetadataUpdate) {
+    METADATA.with_borrow_mut(|cell| {
+        let mut metadata = cell.get().clone();
+        metadata.populate(args);
+        cell.set(metadata);
+    });
 }
 
 pub fn get_metadata() -> Metadata {

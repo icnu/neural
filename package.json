@@ -12,6 +12,7 @@
   "license": "ISC",
   "workspaces": [
     "src/frontend",
-    "src/oc_agent"
+    "src/oc_agent",
+    "src/utils"
   ]
 }

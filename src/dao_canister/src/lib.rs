@@ -1,5 +1,5 @@
 use ic_cdk::{export_candid, init, query, update};
-use crate::{guards::guard_caller_is_controller, metadata::{InitArgs, Metadata}, proposals::types::{Proposal, ProposalMetadata, ProposalVerdict}};
+use crate::{guards::guard_caller_is_controller, metadata::{InitArgs, Metadata, MetadataUpdate}, proposals::types::{Proposal, ProposalMetadata, ProposalVerdict}};
 
 mod metadata;
 mod memory;
@@ -10,6 +10,11 @@ mod guards;
 #[init]
 fn init(args: InitArgs) {
     metadata::init_metadata(args, ic_cdk::caller());
+}
+
+#[update]
+fn update_metadata(args: MetadataUpdate) {
+    metadata::update_metadata(args);
 }
 
 #[update(guard = "guard_caller_is_controller")]

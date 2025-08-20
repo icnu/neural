@@ -15,7 +15,7 @@ pub async fn deploy_dao_canister(id: u64, creator: Principal) -> Principal {
                 wasm_memory_limit: None,
             }),
         },
-        20_000_000_000 // 20B
+        5_000_000_000_000 // 5T
     ).await.unwrap().0.canister_id;
 
     install_code(InstallCodeArgument {

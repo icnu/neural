@@ -16,6 +16,11 @@
       "package": "dao_canister",
       "type": "rust"
     },
+    "vote_canister": {
+      "candid": "src/vote_canister/canister.did",
+      "package": "vote_canister",
+      "type": "rust"
+    },
     "hub_canister": {
       "candid": "src/hub_canister/canister.did",
       "package": "hub_canister",

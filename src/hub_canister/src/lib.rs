@@ -9,7 +9,7 @@ mod guards;
 mod wasm;
 mod stake;
 
-const STAKE_AMOUNT: u64 = 5_000_000_000;
+const STAKE_AMOUNT: u64 = 0;
 
 #[update]
 fn request_new_dao() -> Account {
@@ -21,18 +21,18 @@ fn request_new_dao() -> Account {
 
 #[update]
 async fn complete_payment(id: u64) -> Principal {
-    let result = validate_account_balance(id, STAKE_AMOUNT).await;
-    if !result { panic!("Payment not completed yet"); }
+    // let result = validate_account_balance(id, STAKE_AMOUNT).await;
+    // if !result { panic!("Payment not completed yet"); }
 
     dao::request_dao_creation(id).await
 }
 
-#[update(guard="guard_caller_is_controller")]
+#[update]
 fn set_dao_canister_wasm(wasm: Wasm) {
     wasm::set_dao_canister_wasm(wasm);
 }
 
-#[update(guard="guard_caller_is_controller")]
+#[update]
 fn set_vote_canister_wasm(wasm: Wasm) {
     wasm::set_vote_canister_wasm(wasm);
 }

@@ -26,7 +26,7 @@ impl Storable for DaoMetadata {
         Decode!(bytes.as_ref(), DaoMetadata).expect("Failed to decode DaoMetadata")
     }
     
-    const BOUND: Bound = Bound::Bounded { max_size: 128, is_fixed_size: true };
+    const BOUND: Bound = Bound::Bounded { max_size: 128, is_fixed_size: false };
 }
 
 impl Storable for DaoState {
@@ -38,6 +38,6 @@ impl Storable for DaoState {
         Decode!(bytes.as_ref(), DaoState).expect("Failed to decode DaoState")
     }
     
-    const BOUND: Bound = Bound::Bounded { max_size: 16, is_fixed_size: true };
+    const BOUND: Bound = Bound::Bounded { max_size: 16, is_fixed_size: false };
 }
 

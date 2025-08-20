@@ -41,7 +41,7 @@ impl Storable for VoteMetadata {
         Decode!(bytes.as_ref(), VoteMetadata).expect("Failed to decode VoteMetadata")
     }
     
-    const BOUND: Bound = Bound::Bounded { max_size: 256, is_fixed_size: true };
+    const BOUND: Bound = Bound::Bounded { max_size: 256, is_fixed_size: false };
 }
 
 impl VoteMetadata {
