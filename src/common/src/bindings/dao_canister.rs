@@ -52,6 +52,13 @@ pub struct ProposalMetadata {
   pub description: String,
   pub execution_payload: Option<EthereumExecutionData>,
 }
+#[derive(CandidType, Deserialize)]
+pub struct MetadataUpdate {
+  pub url: String,
+  pub token: Principal,
+  pub logo: String,
+  pub name: String,
+}
 
 pub struct Service(pub Principal);
 impl Service {
@@ -66,6 +73,9 @@ impl Service {
   }
   pub async fn request_proposal_voting_close(&self, arg0: &u64, arg1: &ProposalVerdict) -> Result<()> {
     ic_cdk::call(self.0, "request_proposal_voting_close", (arg0,arg1,)).await
+  }
+  pub async fn update_metadata(&self, arg0: &MetadataUpdate) -> Result<()> {
+    ic_cdk::call(self.0, "update_metadata", (arg0,)).await
   }
 }
 

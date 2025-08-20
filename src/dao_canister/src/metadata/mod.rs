@@ -18,7 +18,7 @@ pub fn update_metadata(args: MetadataUpdate) {
     METADATA.with_borrow_mut(|cell| {
         let mut metadata = cell.get().clone();
         metadata.populate(args);
-        cell.set(metadata);
+        cell.set(metadata).unwrap();
     });
 }
 

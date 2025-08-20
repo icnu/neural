@@ -35,7 +35,7 @@ impl SnapshotManager {
             snapshot_stores: snapshots,
             snapshot_index_to_id: HashMap::new(),
             ordered_snapshot_indices: Vec::new(),
-            free_snapshot_stores_mask: 0,
+            free_snapshot_stores_mask: (1 << (num_snapshots + 1)) - 1,
             num_snapshots,
             next_snapshot_id: 1,
             init: false
@@ -44,7 +44,7 @@ impl SnapshotManager {
 
     fn recalculate_cache(&mut self) {
         self.next_snapshot_id = 1;
-        self.free_snapshot_stores_mask = 0;
+        self.free_snapshot_stores_mask = (1 << (self.num_snapshots + 1)) - 1;
         self.snapshot_index_to_id = HashMap::new();
 
         let mut snapshot_ids_and_blocks = Vec::new();
@@ -54,8 +54,7 @@ impl SnapshotManager {
                 self.snapshot_index_to_id.insert(metadata.id, id);
                 
                 if id > self.next_snapshot_id { self.next_snapshot_id = id + 1; }
-            } else {
-                self.free_snapshot_stores_mask |= 1 << metadata.id;
+                self.free_snapshot_stores_mask &= !(1 << metadata.id);
             }
         }
 

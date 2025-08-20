@@ -22,5 +22,5 @@ impl Storable for SnapshotMetadata {
         ciborium::from_reader(bytes.as_ref()).unwrap()
     }
 
-    const BOUND: Bound = Bound::Bounded { max_size: 30, is_fixed_size: false };
+    const BOUND: Bound = Bound::Bounded { max_size: 128, is_fixed_size: false };
 }

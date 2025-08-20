@@ -15,6 +15,12 @@ type Metadata = record {
   logo : opt text;
   name : opt text;
 };
+type MetadataUpdate = record {
+  url : text;
+  token : principal;
+  logo : text;
+  name : text;
+};
 type Proposal = record {
   id : nat64;
   title : text;
@@ -39,4 +45,5 @@ service : (InitArgs) -> {
   get_proposal : (nat64) -> (opt Proposal) query;
   request_new_proposal : (ProposalMetadata) -> (nat64);
   request_proposal_voting_close : (nat64, ProposalVerdict) -> ();
+  update_metadata : (MetadataUpdate) -> ();
 }

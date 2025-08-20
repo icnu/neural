@@ -101,6 +101,7 @@ function IdentityProviderInner({ children }: { children: ReactNode }) {
 
         if (!identity) saveIdentity(identity_);
         setIdentity(identity_);
+        console.log(identity_.getPrincipal().toText());
     }, [identity, setIsConnecting, connectAsync, signMessageAsync]);
 
     const logout = useCallback(async () => {
