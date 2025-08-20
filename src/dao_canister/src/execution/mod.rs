@@ -42,7 +42,7 @@ fn create_derivation_path(principal: &Principal) -> Vec<Vec<u8>> {
 }
 
 fn get_rpc_service() -> RpcService {
-    RpcService::Custom(RpcApi { url: option_env!("RPC_URL").unwrap().into(), headers: None })
+    RpcService::Custom(RpcApi { url: "http://localhost:8545/".into(), headers: None })
 }
 
 pub async fn get_address() -> String {
@@ -74,7 +74,8 @@ pub async fn execute_txn(args: EthereumExecutionData) -> String {
         .with_gas_limit(args.gas_limit)
         .with_value(args.value.try_into().unwrap())
         .with_input(args.data)
-        .with_nonce(nonce.try_into().unwrap());
+        .with_nonce(nonce.try_into().unwrap())
+        .with_chain_id(args.chain_id.try_into().unwrap());
 
     let result = provider.send_transaction(txn).await.unwrap();
     incr_nonce();

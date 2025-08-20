@@ -61,6 +61,7 @@ export async function getEthAddress(identity: Identity): Promise<string> {
     const actor = createActor(process.env.NEXT_PUBLIC_CANISTER_ID_IDENTITY_CANISTER!, {
                     agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false }
                 });
+                console.log(identity.getPrincipal().toString());
     
     return await actor.get_address(identity.getPrincipal());
 }
@@ -82,7 +83,7 @@ function IdentityProviderInner({ children }: { children: ReactNode }) {
             const result = await connectAsync({ connector: metaMask() });
             if ( result.accounts.length > 0 ) {
                 const actor = createActor(process.env.NEXT_PUBLIC_CANISTER_ID_IDENTITY_CANISTER!, {
-                    agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false }
+                    agentOptions: { host: 'http://localhost:4943', identity: identity_, verifyQuerySignatures: false, shouldFetchRootKey: false }
                 });
                 const loginMessage = await actor.get_login_message(result.accounts[0]);
                 const signature = await signMessageAsync({ account: result.accounts[0], message: loginMessage });

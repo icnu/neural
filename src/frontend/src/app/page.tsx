@@ -10,22 +10,21 @@ import { createActor as createDaoActor } from "@/declarations/dao_canister"
 import { Metadata } from "@/declarations/dao_canister/dao_canister.did"
 import { useEffect, useState } from "react"
 
-async function listDAOs(): Promise<Metadata[]> {
+async function listDAOs(): Promise<[Metadata, string][]> {
   const hub = createHubActor(process.env.NEXT_PUBLIC_CANISTER_ID_HUB_CANISTER!, { agentOptions: { host: 'http://localhost:4943', verifyQuerySignatures: false, shouldFetchRootKey: false } });
   const daos = await hub.list_daos();
 
-  let metadataArr: Metadata[] = [];
+  let metadataArr: [Metadata, string][] = [];
   for ( const dao of daos ) {
-    console.log(dao.toString());
     const metadata = await createDaoActor(dao, { agentOptions: { host: 'http://localhost:4943', verifyQuerySignatures: false, shouldFetchRootKey: false } }).get_metadata();
-    if ( metadata.name[0] ) metadataArr.push(metadata);
+    if ( metadata.name[0] ) metadataArr.push([metadata, dao.toString()]);
   }
 
   return metadataArr;
 }
 
 export default function HomePage() {
-  const [daos, setDAOs] = useState<Metadata[]>([]);
+  const [daos, setDAOs] = useState<[Metadata, string][]>([]);
 
   useEffect(() => {
     listDAOs().then(v => setDAOs(v))
@@ -54,7 +53,7 @@ export default function HomePage() {
           {daos.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {daos.map((dao) => (
-                <DAOCard key={dao.id} dao={dao} />
+                <DAOCard key={dao[0].id} dao={dao[0]} id={dao[1]} />
               ))}
             </div>
           ) : (

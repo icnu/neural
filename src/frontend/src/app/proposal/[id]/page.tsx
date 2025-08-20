@@ -29,108 +29,6 @@ import { createActor as createDaoActor } from "@/declarations/dao_canister"
 import { createActor as createTokenActor } from "@/declarations/token_index_canister"
 import { getEthAddress, useIdentityProvider } from "@/components/identity-provider"
 
-// Mock data for demonstration
-const mockProposals = {
-  "1": {
-    id: "1",
-    daoId: "1",
-    daoName: "DeFi Governance DAO",
-    title: "Increase Staking Rewards by 2%",
-    description: `This proposal aims to increase the annual staking rewards from 8% to 10% to attract more liquidity providers and strengthen our protocol's security.
-
-## Background
-Our current staking rewards of 8% have been in place for 6 months. During this time, we've observed:
-- Declining participation in staking (down 15% from peak)
-- Competitors offering higher rewards (9-12% range)
-- Strong treasury position allowing for increased rewards
-
-## Proposal Details
-- Increase annual staking rewards from 8% to 10%
-- Implementation timeline: 7 days after approval
-- Estimated additional cost: $240,000 annually
-- Expected increase in staked tokens: 25-30%
-
-## Benefits
-1. **Increased Security**: More staked tokens = better network security
-2. **Competitive Positioning**: Match or exceed competitor offerings
-3. **Community Growth**: Attract new participants to our ecosystem
-4. **Token Value**: Increased utility and demand for our token`,
-    status: "active" as const,
-    votesFor: 1250,
-    votesAgainst: 340,
-    totalVotes: 1590,
-    quorum: 2000,
-    startDate: "2024-01-08",
-    endDate: "2024-01-15",
-    proposer: {
-      address: "0x1234...5678",
-      avatar: "/diverse-user-avatars.png",
-      name: "Alice Chen",
-    },
-    execution: {
-      contract: "0xabcd1234efgh5678ijkl9012mnop3456qrst7890",
-      function: "updateStakingReward",
-      parameters: [
-        { name: "newRewardRate", type: "uint256", value: "1000" },
-        { name: "effectiveDate", type: "uint256", value: "1705276800" },
-      ],
-      estimatedGas: "45,000",
-      value: "0 ETH",
-    },
-    userVotingPower: "1,250 DEFI",
-    userHasVoted: false,
-    userVote: "for" as const,
-    executionTxHash: "0x8f7e6d5c4b3a2918f7e6d5c4b3a2918f7e6d5c4b3a2918f7e6d5c4b3a291",
-  },
-  "2": {
-    id: "2",
-    daoId: "1",
-    daoName: "DeFi Governance DAO",
-    title: "Treasury Diversification Strategy",
-    description: `Proposal to allocate 30% of treasury funds to blue-chip cryptocurrencies to reduce risk and improve stability.
-
-## Current Treasury Composition
-- 85% Native tokens (DEFI)
-- 10% Stablecoins (USDC)
-- 5% ETH
-
-## Proposed Allocation
-- 55% Native tokens (DEFI) - reduced from 85%
-- 20% Stablecoins (USDC) - increased from 10%
-- 15% ETH - increased from 5%
-- 10% BTC - new allocation
-
-This diversification will reduce our exposure to single-token risk while maintaining significant exposure to our native token.`,
-    status: "passed" as const,
-    votesFor: 2100,
-    votesAgainst: 450,
-    totalVotes: 2550,
-    quorum: 2000,
-    startDate: "2024-01-03",
-    endDate: "2024-01-10",
-    proposer: {
-      address: "0xabcd...efgh",
-      avatar: "/diverse-user-avatar-set-2.png",
-      name: "Bob Martinez",
-    },
-    execution: {
-      contract: "0xdef456789abc012345def678901abc234567def8",
-      function: "rebalanceTreasury",
-      parameters: [
-        { name: "btcAllocation", type: "uint256", value: "10" },
-        { name: "ethAllocation", type: "uint256", value: "15" },
-        { name: "stablecoinAllocation", type: "uint256", value: "20" },
-      ],
-      estimatedGas: "120,000",
-      value: "0 ETH",
-    },
-    userVotingPower: "1,250 DEFI",
-    userHasVoted: true,
-    userVote: "for" as const,
-    executionTxHash: "0x8f7e6d5c4b3a2918f7e6d5c4b3a2918f7e6d5c4b3a2918f7e6d5c4b3a291",
-  },
-}
-
 type Proposal = {
   dao: string,
   id: string,
@@ -282,7 +180,7 @@ function ExecutionStatus({ txHash }: { txHash: string }) {
             </code>
             <Button variant="ghost" size="sm" asChild className="w-full">
               <a
-                href={`https://etherscan.io/tx/${txHash}`}
+                href={`https://sepolia.etherscan.io/tx/${txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center space-x-1"
@@ -330,7 +228,7 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
     console.log(`[v0] Closed voting for proposal ${proposal.id}`)
     
     loadProposal(params.id, identity).then(v => setProposal(v))
-  }, [identity]);
+  }, [identity, proposal]);
 
   if ( !identity ) return <></>;
   if (!proposal) return <></>;
@@ -509,7 +407,7 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                 </CardContent>
               </Card>
               
-              {proposal.status === "passed" && "executionTxHash" in proposal && (
+              {proposal.status === "passed" && "executionTxnHash" in proposal && (
                 <ExecutionStatus txHash={proposal.executionTxnHash} />
               )}
 

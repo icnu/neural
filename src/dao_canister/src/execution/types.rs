@@ -9,7 +9,7 @@ pub struct EthereumExecutionData {
     pub value: u128,
     pub gas_limit: u128,
     pub chain_id: u128,
-    pub data: Vec<u8>    
+    pub data: Vec<u8>
 }
 
 impl Storable for EthereumExecutionData {

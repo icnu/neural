@@ -1,3 +1,5 @@
+source .env
+
 dfx deploy hub_canister;
 export CANISTER_ID_HUB_CANISTER=$(dfx canister id hub_canister)
 dfx ledger fabricate-cycles --canister $CANISTER_ID_HUB_CANISTER --cycles 100_000_000_000_000

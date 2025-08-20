@@ -15,19 +15,6 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { notFound } from "next/navigation"
 
-// Mock DAO data
-const mockDAOs = {
-  "1": {
-    id: "1",
-    name: "DeFi Governance DAO",
-    tokenSymbol: "DEFI",
-    userVotingPower: "1,250 DEFI",
-    proposalThreshold: "1", // 1% of total supply needed
-    minVotingPeriod: 3,
-    maxVotingPeriod: 30,
-  },
-}
-
 interface ExecutionParameter {
   name: string
   type: string
@@ -69,12 +56,6 @@ export default function CreateProposalPage({ params }: { params: { id: string } 
     executionParameters: [],
     executionValue: "0",
   })
-
-  const dao = mockDAOs[params.id as keyof typeof mockDAOs]
-
-  if (!dao) {
-    notFound()
-  }
 
   const updateFormData = (field: keyof ProposalFormData, value: string | ExecutionParameter[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -120,17 +101,17 @@ export default function CreateProposalPage({ params }: { params: { id: string } 
             className="inline-flex items-center text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to {dao.name}
+            Back
           </Link>
 
           {/* Header */}
           <div className="space-y-2">
             <h1 className="text-3xl font-bold text-foreground">Create New Proposal</h1>
-            <p className="text-muted-foreground">Submit a proposal for {dao.name} members to vote on</p>
+            <p className="text-muted-foreground">Submit a proposal for members to vote on</p>
           </div>
 
           {/* User Info Card */}
-          <Card className="bg-muted/50">
+          {/* <Card className="bg-muted/50">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -146,7 +127,7 @@ export default function CreateProposalPage({ params }: { params: { id: string } 
                 </Badge>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           <div className="space-y-6">
             {/* Basic Information */}

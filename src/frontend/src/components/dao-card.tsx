@@ -3,9 +3,9 @@ import { Metadata } from "@/declarations/dao_canister/dao_canister.did"
 import { Users, FileText } from "lucide-react"
 import Link from "next/link"
 
-export function DAOCard({ dao }: { dao: Metadata }) {
+export function DAOCard({ dao, id }: { dao: Metadata, id: string }) {
   return (
-    <Link href={`/dao/${dao.id}`}>
+    <Link href={`/dao/${id}`}>
       <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-card border-border">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
