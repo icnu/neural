@@ -47,7 +47,7 @@ pub async fn request_new_proposal(metadata: ProposalMetadata, proposer: Principa
     proposal.snapshot_id = Some(snapshot_id.clone().0.try_into().unwrap());
     PROPOSALS.with_borrow_mut(|map| map.insert(id, proposal.clone()));
 
-    deploy_vote_canister(InitArgs {
+    let vote_canister_principal = deploy_vote_canister(InitArgs {
         proposal_id: id,
         snapshot_id: snapshot_id.0.try_into().unwrap(),
         token_canister: dao_metadata.token.unwrap(),
@@ -55,6 +55,7 @@ pub async fn request_new_proposal(metadata: ProposalMetadata, proposer: Principa
     }).await;
 
     proposal.state = ProposalState::Open;
+    proposal.vote_canister = Some(vote_canister_principal);
     PROPOSALS.with_borrow_mut(|map| map.insert(id, proposal.clone()));
 
     id

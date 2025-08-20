@@ -26,7 +26,7 @@ function build_canisters {
 build_canisters
 
 generate_bindings src/common/candid/icp.did src/common/src/bindings/icp.rs
-generate_bindings src/common/candid/siwe.did src/common/src/bindings/siwe.rs
+generate_bindings src/identity_canister/canister.did src/common/src/bindings/identity_canister.rs
 generate_bindings src/dao_canister/canister.did src/common/src/bindings/dao_canister.rs
 generate_bindings src/token_index_canister/canister.did src/common/src/bindings/token_index_canister.rs
 generate_bindings src/hub_canister/canister.did src/common/src/bindings/hub_canister.rs
