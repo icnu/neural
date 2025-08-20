@@ -18,7 +18,7 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-  title: "DAOManager - Create and Manage DAOs",
+  title: "Neural",
   description: "Professional platform for creating and managing decentralized autonomous organizations",
   generator: "v0.app",
 }
