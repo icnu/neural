@@ -41,6 +41,7 @@ type ProposalMetadata = record {
 type ProposalState = variant { VotingClosed; Init; Open; Executed };
 type ProposalVerdict = variant { REJECTED; ACCEPTED };
 service : (InitArgs) -> {
+  get_execution_address : () -> (text);
   get_metadata : () -> (Metadata) query;
   get_proposal : (nat64) -> (opt Proposal) query;
   request_new_proposal : (ProposalMetadata) -> (nat64);

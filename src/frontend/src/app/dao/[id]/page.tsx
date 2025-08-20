@@ -8,85 +8,74 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Users, FileText, Plus, ArrowLeft, Clock, CheckCircle, XCircle } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { createActor } from "@/declarations/dao_canister";
+import { createActor as createDaoActor } from "@/declarations/dao_canister";
+import { createActor as createVoteActor } from "@/declarations/vote_canister";
+import { Identity } from "@dfinity/agent";
+import { useIdentityProvider } from "@/components/identity-provider";
+import { useEffect, useState } from "react";
 
-// Mock data for demonstration
-const mockDAOs = {
-  "1": {
-    id: "1",
-    name: "DeFi Governance DAO",
-    description:
-      "A decentralized autonomous organization focused on governing DeFi protocols and making strategic decisions for the ecosystem. We aim to create a more transparent and community-driven approach to DeFi governance.",
-    logo: "/placeholder.png",
-    memberCount: 1247,
-    proposalCount: 23,
-    votingPower: "1,250 DEFI",
-    multisigAddress: "0x742d35Cc6634C0532925a3b8D4C9db96590c6C8b",
-  },
-  "2": {
-    id: "2",
-    name: "Green Energy Collective",
-    description:
-      "Community-driven organization promoting sustainable energy solutions through blockchain governance and funding.",
-    logo: "/green-energy-logo.png",
-    memberCount: 892,
-    proposalCount: 15,
-    votingPower: "850 GREEN",
-    multisigAddress: "0x8ba1f109551bD432803012645Hac136c9c1588c9",
-  },
+type DAO = {
+  id: string,
+  name: string,
+  logo: string,
+  totalSupply: bigint,
+  proposalCount: number
+  votingPower: bigint,
+  executionAddress: string,
+  proposals: Proposal[]
 }
 
-const mockProposals = [
-  {
-    id: "1",
-    title: "Increase Staking Rewards by 2%",
-    description: "Proposal to increase the annual staking rewards from 8% to 10% to attract more liquidity providers.",
-    status: "active" as const,
-    votesFor: 1250,
-    votesAgainst: 340,
-    totalVotes: 1590,
-    endDate: "2024-01-15",
-    proposer: {
-      address: "0x1234...5678",
-      avatar: "/diverse-user-avatars.png",
-    },
-  },
-  {
-    id: "2",
-    title: "Treasury Diversification Strategy",
-    description: "Allocate 30% of treasury funds to blue-chip cryptocurrencies to reduce risk and improve stability.",
-    status: "passed" as const,
-    votesFor: 2100,
-    votesAgainst: 450,
-    totalVotes: 2550,
-    endDate: "2024-01-10",
-    proposer: {
-      address: "0xabcd...efgh",
-      avatar: "/diverse-user-avatar-set-2.png",
-    },
-  },
-  {
-    id: "3",
-    title: "New Partnership with Layer 2 Protocol",
-    description: "Establish strategic partnership with Arbitrum to reduce transaction costs for DAO operations.",
-    status: "rejected" as const,
-    votesFor: 800,
-    votesAgainst: 1200,
-    totalVotes: 2000,
-    endDate: "2024-01-05",
-    proposer: {
-      address: "0x9876...5432",
-      avatar: "/diverse-user-avatars-3.png",
-    },
-  },
-]
-
-async function loadDAODetails(canister: string) {
-  const daoActor = createActor(canister);
-  const metadata = daoActor.get_metadata();
+type Proposal = {
+  id: string,
+  title: string,
+  description: string,
+  status: 'passed' | 'rejected' | 'active',
+  votesFor: bigint,
+  votesAgainst: bigint,
+  totalVotes: bigint,
 }
 
-function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
+async function loadDAO(canister: string, identity: Identity): Promise<DAO> {
+  const daoActor = createDaoActor(canister, { agentOptions: { host: 'http://localhost:4943', identity } });
+  const metadata = await daoActor.get_metadata();
+  const executionAddress = await daoActor.get_execution_address();
+  const proposals: Proposal[] = [];
+  let votingPower = BigInt(0);
+
+  for ( let i = 0; i < 5; i++ ) {
+    const proposal = await daoActor.get_proposal(BigInt(i));
+    if ( proposal.length == 0 ) break;
+
+    const voteActor = await createVoteActor(proposal[0].vote_canister[0]!, { agentOptions: { host: 'http://localhost:4943', identity } });
+    const voteData = await voteActor.get_metadata();
+
+    if ( votingPower == BigInt(0) )
+      votingPower = await voteActor.get_voting_power();
+
+    proposals.push({
+      id: proposal[0].vote_canister[0]!,
+      title: proposal[0].title,
+      description: proposal[0].description,
+      status: proposal[0].execution_txn_hash[0] ? 'passed' : 'active',
+      votesFor: voteData.vote_accept,
+      votesAgainst: voteData.vote_reject,
+      totalVotes: votingPower,
+    });
+  }
+
+  return {
+    id: canister,
+    name: metadata.name[0] ?? '',
+    logo: metadata.logo[0] ?? '/placeholder.png',
+    totalSupply: votingPower,
+    proposalCount: proposals.length,
+    votingPower: votingPower,
+    executionAddress: executionAddress,
+    proposals: proposals
+  };
+}
+
+function ProposalCard({ proposal }: { proposal: Proposal }) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "active":
@@ -113,7 +102,9 @@ function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
     }
   }
 
-  const votePercentage = proposal.totalVotes > 0 ? (proposal.votesFor / proposal.totalVotes) * 100 : 0
+  const votesFor = Number.parseInt(proposal.votesFor.toString());
+  const votesTotal = Number.parseInt(proposal.totalVotes.toString());
+  const votePercentage = proposal.totalVotes > 0 ? (votesFor / votesTotal) * 100 : 0
 
   return (
     <Link href={`/proposal/${proposal.id}`}>
@@ -127,7 +118,6 @@ function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
                   {getStatusIcon(proposal.status)}
                   <span className="ml-1 capitalize">{proposal.status}</span>
                 </Badge>
-                <span className="text-sm text-muted-foreground">Ends {proposal.endDate}</span>
               </div>
             </div>
           </div>
@@ -148,10 +138,6 @@ function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
               <span>{proposal.votesAgainst.toLocaleString()} Against</span>
             </div>
           </div>
-
-          <div className="flex items-center space-x-2 pt-2">
-            <span className="text-sm text-muted-foreground">by {proposal.proposer.address}</span>
-          </div>
         </CardContent>
       </Card>
     </Link>
@@ -159,10 +145,16 @@ function ProposalCard({ proposal }: { proposal: (typeof mockProposals)[0] }) {
 }
 
 export default function DAODetailPage({ params }: { params: { id: string } }) {
-  const dao = mockDAOs[params.id as keyof typeof mockDAOs]
+  const { identity } = useIdentityProvider();
+  const [dao, setDao] = useState<DAO | undefined>(undefined);
+
+  useEffect(() => {
+    if ( !identity ) return;
+    loadDAO(params.id, identity).then(d => setDao(d));
+  }, [identity]);
 
   if (!dao) {
-    notFound()
+    return <></>;
   }
 
   return (
@@ -173,7 +165,7 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
           {/* Back Navigation */}
           <Link href="/" className="inline-flex items-center text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to My DAOs
+            Back to Active DAOs
           </Link>
 
           {/* DAO Header */}
@@ -203,7 +195,7 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
               <div className="flex items-center space-x-3">
                 <Users className="w-5 h-5 text-muted-foreground" />
                 <div>
-                  <p className="text-lg font-semibold text-card-foreground">{dao.memberCount.toLocaleString()}</p>
+                  <p className="text-lg font-semibold text-card-foreground">{dao.totalSupply.toLocaleString()}</p>
                   <p className="text-sm text-muted-foreground">Total Supply</p>
                 </div>
               </div>
@@ -232,7 +224,7 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
                 </div>
                 <div>
                   <p className="text-sm font-mono text-card-foreground">
-                    {dao.multisigAddress.slice(0, 6)}...{dao.multisigAddress.slice(-4)}
+                    {dao.executionAddress.slice(0, 6)}...{dao.executionAddress.slice(-4)}
                   </p>
                   <p className="text-sm text-muted-foreground">Execution Address</p>
                 </div>
@@ -245,16 +237,16 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-foreground">Proposals</h2>
               <div className="flex items-center space-x-2">
-                <Badge variant="outline">{mockProposals.length} Total</Badge>
+                <Badge variant="outline">{dao.proposalCount} Total</Badge>
                 <Badge variant="outline" className="bg-blue-50 text-blue-700">
-                  {mockProposals.filter((p) => p.status === "active").length} Active
+                  {dao.proposals.filter((p) => p.status === "active").length} Active
                 </Badge>
               </div>
             </div>
 
-            {mockProposals.length > 0 ? (
+            {dao.proposals.length > 0 ? (
               <div className="grid gap-6">
-                {mockProposals.map((proposal) => (
+                {dao.proposals.map((proposal) => (
                   <ProposalCard key={proposal.id} proposal={proposal} />
                 ))}
               </div>

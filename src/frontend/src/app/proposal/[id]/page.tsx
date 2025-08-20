@@ -289,11 +289,11 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Back Navigation */}
           <Link
-            href={`/dao/${proposal.daoId}`}
+            href={`/`}
             className="inline-flex items-center text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to {proposal.daoName}
+            Back
           </Link>
 
           {/* Proposal Header */}
@@ -306,12 +306,6 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                     {getStatusIcon(proposal.status)}
                     <span className="ml-2 capitalize">{proposal.status}</span>
                   </Badge>
-                  <div className="flex items-center space-x-2 text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    <span className="text-sm">
-                      {proposal.startDate} - {proposal.endDate}
-                    </span>
-                  </div>
                 </div>
               </div>
               {isActive && (

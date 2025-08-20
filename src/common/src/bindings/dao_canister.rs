@@ -62,6 +62,9 @@ pub struct MetadataUpdate {
 
 pub struct Service(pub Principal);
 impl Service {
+  pub async fn get_execution_address(&self) -> Result<(String,)> {
+    ic_cdk::call(self.0, "get_execution_address", ()).await
+  }
   pub async fn get_metadata(&self) -> Result<(Metadata,)> {
     ic_cdk::call(self.0, "get_metadata", ()).await
   }
