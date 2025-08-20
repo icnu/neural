@@ -28,13 +28,8 @@ async fn close_vote() {
 }
 
 #[query]
-async fn has_cast_vote() -> bool {
-    vote::has_cast_vote(ic_cdk::caller()).await
-}
-
-#[query]
-async fn get_voting_power() -> Nat {
-    vote::voting_power(ic_cdk::caller()).await
+async fn has_cast_vote(user: String) -> bool {
+    vote::has_cast_vote(user).await
 }
 
 export_candid!();

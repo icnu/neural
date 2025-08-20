@@ -11,15 +11,16 @@ import { Metadata } from "@/declarations/dao_canister/dao_canister.did"
 import { useEffect, useState } from "react"
 
 async function listDAOs(): Promise<Metadata[]> {
-  const hub = createHubActor(process.env.NEXT_PUBLIC_CANISTER_ID_HUB_CANISTER!, { agentOptions: { host: 'http://localhost:4943' } });
+  const hub = createHubActor(process.env.NEXT_PUBLIC_CANISTER_ID_HUB_CANISTER!, { agentOptions: { host: 'http://localhost:4943', verifyQuerySignatures: false, shouldFetchRootKey: false } });
   const daos = await hub.list_daos();
 
   let metadataArr: Metadata[] = [];
-  for ( const dao in daos ) {
-    const metadata = await createDaoActor(dao, { agentOptions: { host: 'http://localhost:4943' } }).get_metadata();
+  for ( const dao of daos ) {
+    console.log(dao.toString());
+    const metadata = await createDaoActor(dao, { agentOptions: { host: 'http://localhost:4943', verifyQuerySignatures: false, shouldFetchRootKey: false } }).get_metadata();
     if ( metadata.name[0] ) metadataArr.push(metadata);
   }
-  
+
   return metadataArr;
 }
 

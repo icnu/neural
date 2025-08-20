@@ -11,8 +11,9 @@ import { notFound } from "next/navigation"
 import { createActor as createDaoActor } from "@/declarations/dao_canister";
 import { createActor as createVoteActor } from "@/declarations/vote_canister";
 import { Identity } from "@dfinity/agent";
-import { useIdentityProvider } from "@/components/identity-provider";
+import { getEthAddress, useIdentityProvider } from "@/components/identity-provider";
 import { useEffect, useState } from "react";
+import { createActor as createTokenActor } from "@/declarations/token_index_canister";
 
 type DAO = {
   id: string,
@@ -36,21 +37,24 @@ type Proposal = {
 }
 
 async function loadDAO(canister: string, identity: Identity): Promise<DAO> {
-  const daoActor = createDaoActor(canister, { agentOptions: { host: 'http://localhost:4943', identity } });
+  const daoActor = createDaoActor(canister, { agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false } });
   const metadata = await daoActor.get_metadata();
   const executionAddress = await daoActor.get_execution_address();
+  const ethAddress = await getEthAddress(identity);
   const proposals: Proposal[] = [];
   let votingPower = BigInt(0);
 
-  for ( let i = 0; i < 5; i++ ) {
+  if ( metadata.token[0] ) {
+    const tokenActor = createTokenActor(metadata.token[0], { agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false } });
+    votingPower = (await tokenActor.get_token_balance(ethAddress))[0] ?? votingPower;
+  }
+
+  for ( let i = 1; i < 5; i++ ) {
     const proposal = await daoActor.get_proposal(BigInt(i));
     if ( proposal.length == 0 ) break;
 
-    const voteActor = await createVoteActor(proposal[0].vote_canister[0]!, { agentOptions: { host: 'http://localhost:4943', identity } });
+    const voteActor = await createVoteActor(proposal[0].vote_canister[0]!, { agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false } });
     const voteData = await voteActor.get_metadata();
-
-    if ( votingPower == BigInt(0) )
-      votingPower = await voteActor.get_voting_power();
 
     let isVotingClosed = 'VotingClosed' in proposal[0].state;
     let isVoteAccepted = proposal[0].verdict[0] ? 'ACCEPTED' in proposal[0].verdict[0] : false;

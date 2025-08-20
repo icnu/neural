@@ -21,25 +21,12 @@ pub fn get_metadata() -> VoteMetadata {
     VOTE_METADATA.with_borrow(|cell| cell.get().clone())
 }
 
-pub async fn has_cast_vote(user: Principal) -> bool {
-    let identity_service = IdentityService(Principal::from_text(option_env!("CANISTER_ID_IDENTITY_CANISTER").unwrap()).unwrap());
-    let user_chain_address = identity_service.get_address(&user).await.unwrap().0;
-    let user_chain_address = user_chain_address.to_lowercase();
+pub async fn has_cast_vote(user: String) -> bool {
+    let user = user.to_lowercase();
 
     VOTE_CAST_INDEX.with_borrow_mut(|map| {
-        map.contains_key(&user_chain_address)
+        map.contains_key(&user)
     })
-}
-
-pub async fn voting_power(user: Principal) -> Nat {
-    let metadata= get_metadata();
-    let identity_service = IdentityService(Principal::from_text(option_env!("CANISTER_ID_IDENTITY_CANISTER").unwrap()).unwrap());
-    let token_service = TokenService(metadata.token_canister);
-    let user_chain_address = identity_service.get_address(&user).await.unwrap().0;
-    let user_chain_address = user_chain_address.to_lowercase();
-
-    let user_token_balance = token_service.get_token_balance_at_snapshot(&user_chain_address, &Nat::from(metadata.snapshot_id)).await.unwrap().0.unwrap();
-    user_token_balance
 }
 
 pub async fn cast_vote(user: Principal, vote: ProposalVerdict) {

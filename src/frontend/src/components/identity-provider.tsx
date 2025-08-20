@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
-import { SignIdentity } from '@dfinity/agent';
+import { Identity, SignIdentity } from '@dfinity/agent';
 import { AuthClient, IdbStorage } from '@dfinity/auth-client';
 import { createConfig, http, useAccount, useConnect, useSignMessage, WagmiProvider } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
@@ -57,6 +57,14 @@ async function resetIdentity() {
     await storage.remove(KEY_EPHEMERAL_SIGN_IDENTITY);
 }
 
+export async function getEthAddress(identity: Identity): Promise<string> {
+    const actor = createActor(process.env.NEXT_PUBLIC_CANISTER_ID_IDENTITY_CANISTER!, {
+                    agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false }
+                });
+    
+    return await actor.get_address(identity.getPrincipal());
+}
+
 function IdentityProviderInner({ children }: { children: ReactNode }) {
     const { connectAsync } = useConnect();
     const { signMessageAsync } = useSignMessage();
@@ -74,7 +82,7 @@ function IdentityProviderInner({ children }: { children: ReactNode }) {
             const result = await connectAsync({ connector: metaMask() });
             if ( result.accounts.length > 0 ) {
                 const actor = createActor(process.env.NEXT_PUBLIC_CANISTER_ID_IDENTITY_CANISTER!, {
-                    agentOptions: { host: 'http://localhost:4943', identity: identity_ }
+                    agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false }
                 });
                 const loginMessage = await actor.get_login_message(result.accounts[0]);
                 const signature = await signMessageAsync({ account: result.accounts[0], message: loginMessage });

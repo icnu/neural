@@ -39,11 +39,8 @@ impl Service {
   pub async fn get_metadata(&self) -> Result<(VoteMetadata,)> {
     ic_cdk::call(self.0, "get_metadata", ()).await
   }
-  pub async fn get_voting_power(&self) -> Result<(candid::Nat,)> {
-    ic_cdk::call(self.0, "get_voting_power", ()).await
-  }
-  pub async fn has_cast_vote(&self) -> Result<(bool,)> {
-    ic_cdk::call(self.0, "has_cast_vote", ()).await
+  pub async fn has_cast_vote(&self, arg0: &String) -> Result<(bool,)> {
+    ic_cdk::call(self.0, "has_cast_vote", (arg0,)).await
   }
 }
 

@@ -26,7 +26,8 @@ import { notFound } from "next/navigation"
 import { Identity } from "@dfinity/agent"
 import { createActor as createVoteActor } from "@/declarations/vote_canister"
 import { createActor as createDaoActor } from "@/declarations/dao_canister"
-import { useIdentityProvider } from "@/components/identity-provider"
+import { createActor as createTokenActor } from "@/declarations/token_index_canister"
+import { getEthAddress, useIdentityProvider } from "@/components/identity-provider"
 
 // Mock data for demonstration
 const mockProposals = {
@@ -153,11 +154,14 @@ type Proposal = {
 }
 
 async function loadProposal(id: string, identity: Identity): Promise<Proposal | undefined> {
-  const actor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity } });
-  const voteData = await actor.get_metadata();
-  const metadata = await createDaoActor(voteData.dao_canister).get_proposal(voteData.proposal_id);
-  const votingPower = await actor.get_voting_power();
-  const hasCastVote = await actor.has_cast_vote();
+  const voteActor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false } });
+  const voteData = await voteActor.get_metadata();
+  const daoActor = createDaoActor(voteData.dao_canister, { agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false } });
+  const tokenActor = createTokenActor(voteData.token_canister, { agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false } });
+  const metadata = await daoActor.get_proposal(voteData.proposal_id);
+  const ethAddress = await getEthAddress(identity);
+  const votingPower = (await tokenActor.get_token_balance_at_snapshot(ethAddress, voteData.snapshot_id))[0] ?? BigInt(0);
+  const hasCastVote = await voteActor.has_cast_vote(ethAddress);
   if ( metadata.length == 0 ) return;
 
   let isVotingClosed = 'VotingClosed' in metadata[0].state;
@@ -190,12 +194,12 @@ async function loadProposal(id: string, identity: Identity): Promise<Proposal | 
 }
 
 async function castVote(id: string, identity: Identity, vote: 'for' | 'against') {
-  const actor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity } });
+  const actor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false } });
   await actor.cast_vote(vote === 'for' ? {ACCEPTED: null} : {REJECTED: null});
 }
 
 async function closeVote(id: string, identity: Identity) {
-  const actor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity } });
+  const actor = createVoteActor(id, { agentOptions: { host: 'http://localhost:4943', identity, verifyQuerySignatures: false, shouldFetchRootKey: false } });
   await actor.close_vote();
 }
 
@@ -308,6 +312,26 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
     loadProposal(params.id, identity).then(v => setProposal(v))
   }, [identity]);
 
+  const handleVote = useCallback(async (voteType: "for" | "against") => {
+    if ( !identity ) return;
+    setIsVoting(true)
+    await castVote(params.id, identity, voteType);
+    setIsVoting(false)
+    
+    loadProposal(params.id, identity).then(v => setProposal(v))
+  }, [identity]);
+
+  const handleCloseVoting = useCallback(async () => {
+    if ( !identity ) return;
+    if ( !proposal ) return;
+    setIsClosingVoting(true)
+    await closeVote(params.id, identity);
+    setIsClosingVoting(false)
+    console.log(`[v0] Closed voting for proposal ${proposal.id}`)
+    
+    loadProposal(params.id, identity).then(v => setProposal(v))
+  }, [identity]);
+
   if ( !identity ) return <></>;
   if (!proposal) return <></>;
 
@@ -317,23 +341,6 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
   const votePercentage = proposal.totalVotes > 0 ? (votesFor / totalVotes) * 100 : 0
   const quorumPercentage = proposal.totalVotes > 0 ? (totalVotes / quorum) * 100 : 0
   const isActive = proposal.status === "active"
-
-  const handleVote = useCallback(async (voteType: "for" | "against") => {
-    setIsVoting(true)
-    await castVote(params.id, identity, voteType);
-    setIsVoting(false)
-    
-    loadProposal(params.id, identity).then(v => setProposal(v))
-  }, [identity]);
-
-  const handleCloseVoting = useCallback(async () => {
-    setIsClosingVoting(true)
-    await closeVote(params.id, identity);
-    setIsClosingVoting(false)
-    console.log(`[v0] Closed voting for proposal ${proposal.id}`)
-    
-    loadProposal(params.id, identity).then(v => setProposal(v))
-  }, [identity]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
