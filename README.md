@@ -25,9 +25,14 @@ _More commands to be added as we go on with the project_
 
 <img width="2958" height="1658" alt="image" src="https://github.com/user-attachments/assets/02db407c-602f-4eb7-a32d-28a7aba02e2d" />
 
-The project has 3 components:
+The project has 6 components:
+- **Token Index Canister:** This canister provides an index of addresses and balances of an ERC20 token, with snapshotting support.
+- **Identity Canister:** This canister provides federated identity across chains and wallets, and provides a seamless experience for the users.
+- **Hub Canister:** This canister acts as an orchestrator for DAO Canisters, and provides WASM storage for dynamically deployed Vote and DAO canisters. It handles upgrades and cycles management.
+- **DAO Canister:** This canister represents an individual DAO. It uses one or more Token Index Canisters to support creating and voting on proposals.
+- **Vote Canister:** Vote Canister manages an individual proposal voting and has customizable voting strategies.
 - **Registry Canister:** This canister is a clone of the Encrypted Maps canister. It stores the encrypted User Identity data, and verifies the TEE Attestations through a handshake process for access to encrypted values.
-- **Proxy Agent:** The off-chain component responsible for establishing websocket communication with Discord servers. Also securely handles the storage of user identity. It runs in a Nitro TEE Enclave for trust.
+- **Proxy Agent:** The off-chain component responsible for establishing websocket communication with Discord servers. Also securely handles the storage of user identity. It runs in a Nitro TEE Enclave for trust. The proxy agent also multiplexes as a feeder for the Token Index Canister.
 - **Frontend Canister**
 
 _Note: TEEs have been avoided for this hackathon project because of the high costs. In production, we'll use OracleKit's [nitro-tee-kit](https://github.com/OracleKit/nitro-tee-kit) and [nitro-tee-attestation](https://github.com/OracleKit/nitro-tee-attestation)_
@@ -35,6 +40,7 @@ _Note: TEEs have been avoided for this hackathon project because of the high cos
 The project uses the following external components:
 - **SNS Aggregator:** For up-to-date SNS data
 - **Internet Identity:** For authentication
+- **EVM / SOL RPC Canister:** For transaction execution
 
 ### Technical Workflow
 
