@@ -6,13 +6,27 @@ Voting on SNS proposals, Stake-aware Access Controls, Enhanced Community Collabo
 
 This project enables seamless, secure, and privacy-conscious voting on Internet Computer’s SNS (Service Nervous System) proposals directly within Discord. It leverages Internet Identity, VetKeys and TEEs to make the entire user-flow completely secure. Designed with extensibility in mind, the system also lays the foundation for advanced community features such as stake-aware access control and enhanced governance workflows — turning Discord into a robust platform for decentralized decision-making and engagement.
 
-[Demo Video](https://youtu.be/8pwRV3gN4Mk) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1qW7-CRB6_LgfBYmMXB7KT_abk2aB5U_x/view?usp=sharing)
+[Demo Video](https://youtu.be/dUQh-IkHy70) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1qW7-CRB6_LgfBYmMXB7KT_abk2aB5U_x/view?usp=sharing)
+
+## Features
+- Gasless decentralized voting
+- Truly decentralized cross-chain DAO infrastructure
+- Native integration for multi-chain transaction execution
+- Auditable
 
 ## How does it work?
 
-- Login through Internet Identity.
-- Add the ephemeral principal as a Hot Key for your neurons.
-- And you're done!
+- Enter some basic details about your DAO
+- Enter the governance token smart contracts address.
+- Choose a voting strategy.
+- Deposit as stake.
+- You're done! You can now create and vote on proposals for your newly created DAO.
+- To vote, just login with Metamask or Internet Identity and start voting!
+
+## ICP Features Used
+
+- VetKeys - in Registry Canister, for encrypted state
+- Chain Fusion - for transaction execution in DAO Canister
 
 ## Architecture
 
@@ -35,19 +49,6 @@ The project uses the following external components:
 - **Internet Identity:** For authentication
 - **EVM / SOL RPC Canister:** For transaction execution
 
-### Technical Workflow
-
-- User clicks the "Login" button on Discord.
-- The interaction is received by `Proxy Agent`, which send a ephemeral response with a unique login link.
-- The link takes the user to a login page through the `Frontend` canister.
-- User logins through Internet Identity.
-- Private Key of the ephemeral II principal and delegation information, gets encrypted and stored in the `Registry` canister
-- Whenever user tries to interact with proposals, `Proxy Agent` undergoes handshake for TEE verification with `Registry` canister.
-- It then gets the corresponding II data and carries the interaction on behalf of the user.
-
-## Security
-
-The ephemeral Internet Identity principal, it's private keys and the delegation data are all encrypted and stored in the Registry Canister using VetKeys on ICP. The `Registry Canister` grants access to the keys, only to the `Proxy Agent` by verifying the Nitro TEE Attestations, and matching the running image hash to the last release. This ensures the sensitive data is not exposed in any way.
 
 ## Deployed Canisters
 - Frontend Canister: [bv6mc-zqaaa-aaaam-aenqa-cai](https://dashboard.internetcomputer.org/canister/bv6mc-zqaaa-aaaam-aenqa-cai)
