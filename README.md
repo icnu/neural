@@ -1,61 +1,101 @@
-# `neural`
+# Neuron Bot
 
-Welcome to your new `neural` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+_This project is a part of series of projects, **Neural** for WCHL 2025, meant to make the ICP DAO capabilities accessible to organizations outside ICP. The goal is to establish ICP as the de-facto DAO platform for any needs._
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+Voting on SNS proposals, Stake-aware Access Controls, Enhanced Community Collaboration, all through Discord now!
 
-To learn more before you start working with `neural`, see the following documentation available online:
+This project enables seamless, secure, and privacy-conscious voting on Internet Computer’s SNS (Service Nervous System) proposals directly within Discord. It leverages Internet Identity, VetKeys and TEEs to make the entire user-flow completely secure. Designed with extensibility in mind, the system also lays the foundation for advanced community features such as stake-aware access control and enhanced governance workflows — turning Discord into a robust platform for decentralized decision-making and engagement.
 
-- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
-- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
-- [Rust Canister Development Guide](https://internetcomputer.org/docs/current/developer-docs/backend/rust/)
-- [ic-cdk](https://docs.rs/ic-cdk)
-- [ic-cdk-macros](https://docs.rs/ic-cdk-macros)
-- [Candid Introduction](https://internetcomputer.org/docs/current/developer-docs/backend/candid/)
+[Demo Video](https://youtu.be/lQ2AFV7X6i0) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1qW7-CRB6_LgfBYmMXB7KT_abk2aB5U_x/view?usp=sharing)
 
-If you want to start working on your project right away, you might want to try the following commands:
+## How does it work?
 
+- Login through Internet Identity.
+- Add the ephemeral principal as a Hot Key for your neurons.
+- And you're done!
+
+## Commands Supported
+
+- `/display_login_message`: Displays a message with a button for users to Authenticate themselves
+- `/print_proposal sns=`: Lets you print the last proposal of any SNS by name (used for demo)
+
+_More commands to be added as we go on with the project_
+
+## Architecture
+
+<img width="1758" height="1180" alt="image" src="https://github.com/user-attachments/assets/386f2a72-8513-4463-8e29-f36ff322853a" />
+
+
+The project has 3 components:
+- **Registry Canister:** This canister is a clone of the Encrypted Maps canister. It stores the encrypted User Identity data, and verifies the TEE Attestations through a handshake process for access to encrypted values.
+- **Proxy Agent:** The off-chain component responsible for establishing websocket communication with Discord servers. Also securely handles the storage of user identity. It runs in a Nitro TEE Enclave for trust.
+- **Frontend Canister**
+
+_Note: TEEs have been avoided for this hackathon project because of the high costs. In production, we'll use OracleKit's [nitro-tee-kit](https://github.com/OracleKit/nitro-tee-kit) and [nitro-tee-attestation](https://github.com/OracleKit/nitro-tee-attestation)_
+
+The project uses the following external components:
+- **SNS Aggregator:** For up-to-date SNS data
+- **Internet Identity:** For authentication
+
+### Technical Workflow
+
+- User clicks the "Login" button on Discord.
+- The interaction is received by `Proxy Agent`, which send a ephemeral response with a unique login link.
+- The link takes the user to a login page through the `Frontend` canister.
+- User logins through Internet Identity.
+- Private Key of the ephemeral II principal and delegation information, gets encrypted and stored in the `Registry` canister
+- Whenever user tries to interact with proposals, `Proxy Agent` undergoes handshake for TEE verification with `Registry` canister.
+- It then gets the corresponding II data and carries the interaction on behalf of the user.
+
+## Security
+
+The ephemeral Internet Identity principal, it's private keys and the delegation data are all encrypted and stored in the Registry Canister using VetKeys on ICP. The `Registry Canister` grants access to the keys, only to the `Proxy Agent` by verifying the Nitro TEE Attestations, and matching the running image hash to the last release. This ensures the sensitive data is not exposed in any way.
+
+## Deployed Canisters
+- Frontend Canister: [bv6mc-zqaaa-aaaam-aenqa-cai](https://dashboard.internetcomputer.org/canister/bv6mc-zqaaa-aaaam-aenqa-cai)
+- Registry Canister: [bs7kw-uiaaa-aaaam-aenqq-cai](https://dashboard.internetcomputer.org/canister/bs7kw-uiaaa-aaaam-aenqq-cai)
+
+## Local Setup
+
+Requirements:
+- Bash shell
+- Node.js (>=16.0.0) with pnpm
+- Rust
+
+Create a `.env` file with the following contents:
 ```bash
-cd neural/
-dfx help
-dfx canister --help
+DISCORD_BOT_TOKEN=
+DISCORD_BOT_CLIENT_ID=
+FRONTEND_URL=
+VITE_DISCORD_PROXY_HOSTNAME=http://localhost:3000
+REGISTRY_CANISTER_ICP_NETWORK_URL=http://localhost:4943
+```
+Fill your Discord bot client id and token, and the frontend url (either deployed asset canister or vite local instance url).
+
+Then create a `src/discord-proxy/private-key.json` file with the output of the following script:
+```js
+import { Ed25519KeyIdentity } from '@dfinity/identity';
+console.log(JSON.stringify(Ed25519KeyIdentity.generate().toJSON()))
+```
+This creates a random identity for the `discord-proxy` component, to securely access VetKeys.
+
+To start the project locally, run:
+```bash 
+dfx start --background --clean
+npm run setup
+npm run deploy
+npm run start:proxy
 ```
 
-## Running the project locally
+## About Neural
 
-If you want to test your project locally, you can use the following commands:
+Neural is a larger project that aims to reimagine Decentralized Governance for everyone. In chains outside ICP ecosystem like Ethereum, Solana, Aptos, because of the high gas costs and slow transactions, the DAO ecosystem is mostly on centralized voting and governance apps. This creates a paradox where DAOs that came with the promise of decentralization are themselves centralized.
 
-```bash
-# Starts the replica, running in the background
-dfx start --background
+The vision of Neural is to use ICP to provide a chain-agnostic DAO Governance Layer, that is not gas-heavy yet on-chain and auditable, and close to where the people actually are - Discord, Telegram and Discourse Forums. With Neural, every DAO across all chains can become truly on-chain just at a fraction of the current cost of providers. This will make ICP the heart of DAOs, in-turn entire Web3 ecosystem.
 
-# Deploys your canisters to the replica and generates your candid interface
-dfx deploy
-```
+## Roadmap
+### Neuron Bot - Governance where the people are
+A Discord Bot that allows governance for ICP SNS DAOs from within the Discord app. The architecture could be extended to other centralized communication platforms like Telegram, Discourse Forums, etc and bring the governance layer closer to where people talk.
 
-Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
-
-If you have made changes to your backend canister, you can generate a new candid interface with
-
-```bash
-npm run generate
-```
-
-at any time. This is recommended before starting the frontend development server, and will be run automatically any time you run `dfx deploy`.
-
-If you are making frontend changes, you can start a development server with
-
-```bash
-npm start
-```
-
-Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
-
-### Note on frontend environment variables
-
-If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
-
-- set`DFX_NETWORK` to `ic` if you are using Webpack
-- use your own preferred method to replace `process.env.DFX_NETWORK` in the autogenerated declarations
-  - Setting `canisters -> {asset_canister_id} -> declarations -> env_override to a string` in `dfx.json` will replace `process.env.DFX_NETWORK` with the string in the autogenerated declarations
-- Write your own `createActor` constructor
+### Neural Hub
+The cross-chain governance layer for DAOs that works across Ethereum, Solana, ICP and Aptos. Completely on-chain and auditable voting and proposals with native chain support.

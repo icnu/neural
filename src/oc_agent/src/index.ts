@@ -33,8 +33,8 @@ async function initServer(): Promise<FastifyInstance> {
   server.register(fastifyCors);
   server.register(router);
 
-  await server.listen({ port: 3000 });
-  console.log("Listening on 3000");
+  await server.listen({ port: 3001 });
+  console.log("Listening on 3001");
   return server;
 }
 

@@ -4,7 +4,11 @@
   "description": "",
   "scripts": {
     "build": "bash scripts/build_canisters.sh",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy:hub": "bash scripts/deploy_hub.sh",
+    "deploy:identity": "dfx deploy identity_canister",
+    "deploy:registry": "dfx deploy registry_canister",
+    "start:frontend": "cd src/frontend && npm run dev",
+    "start:oc_agent": "cd src/oc_agent && npm run dev"
   },
   "type": "module",
   "keywords": [],
