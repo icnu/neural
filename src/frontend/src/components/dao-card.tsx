@@ -7,7 +7,7 @@ export function DAOCard({ dao, id }: { dao: Metadata, id: string }) {
   return (
     <Link href={`/dao/${id}`}>
       <Card className="hover:shadow-lg transition-shadow cursor-pointer bg-card border-border">
-        <CardHeader className="pb-3">
+        <CardHeader className="">
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
@@ -23,6 +23,23 @@ export function DAOCard({ dao, id }: { dao: Metadata, id: string }) {
           </div>
         </CardHeader>
         <CardContent className="">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-center space-x-2">
+              <Users className="w-4 h-4 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-medium text-card-foreground">1</p>
+                <p className="text-xs text-muted-foreground">Members</p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <FileText className="w-4 h-4 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-medium text-card-foreground">1</p>
+                <p className="text-xs text-muted-foreground">Proposals</p>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </Link>

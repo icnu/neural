@@ -1,5 +1,5 @@
 use std::{cell::RefCell, str::FromStr};
-use alloy::{network::{EthereumWallet, NetworkWallet, TransactionBuilder}, primitives::Address, providers::{Provider, ProviderBuilder}, rpc::types::TransactionRequest, signers::{icp::IcpSigner, Signer}, transports::icp::{EthSepoliaService, IcpConfig, RpcApi, RpcService}};
+use alloy::{network::{EthereumWallet, TransactionBuilder}, primitives::Address, providers::{Provider, ProviderBuilder}, rpc::types::TransactionRequest, signers::{icp::IcpSigner, Signer}, transports::icp::{IcpConfig, RpcApi, RpcService}};
 use candid::Principal;
 use ic_stable_structures::Cell;
 use serde_bytes::ByteBuf;
@@ -21,7 +21,6 @@ fn incr_nonce() {
 }
 
 fn get_ecdsa_key_name() -> String {
-    return "dfx_test_key".into();
     let dfx_network = option_env!("DFX_NETWORK").unwrap();
     match dfx_network {
         "local" => "dfx_test_key".to_string(),
@@ -42,7 +41,7 @@ fn create_derivation_path(principal: &Principal) -> Vec<Vec<u8>> {
 }
 
 fn get_rpc_service() -> RpcService {
-    RpcService::Custom(RpcApi { url: "http://localhost:8545/".into(), headers: None })
+    RpcService::Custom(RpcApi { url: "https://1rpc.io/sepolia".into(), headers: None })
 }
 
 pub async fn get_address() -> String {

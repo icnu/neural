@@ -2,7 +2,6 @@ use std::cell::RefCell;
 use candid::{Nat, Principal};
 use common::bindings::{dao_canister::{ProposalVerdict, Service as DaoCanisterService}, identity_canister::Service as IdentityService, token_index_canister::Service as TokenService};
 use ic_stable_structures::{BTreeMap, Cell};
-use serde_bytes::ByteBuf;
 use crate::{memory::{id_to_memory, Memory, MemoryIds}, strategy::vote_deciding_strategy, vote::types::{InitArgs, VoteMetadata}};
 
 pub mod types;

@@ -60,7 +60,7 @@ export default function CreateDAOPage() {
     router.push("/dao/new-dao-id")
   }
 
-  const canProceedToStep2 = formData.name && formData.description && formData.tokenAddress && formData.votingAlgorithm
+  const canProceedToStep2 = formData.name && formData.tokenAddress && formData.votingAlgorithm
 
   const steps = [
     { number: 1, title: "DAO Details", icon: Info },
@@ -284,11 +284,6 @@ export default function CreateDAOPage() {
                         <h3 className="text-xl font-semibold">{formData.name}</h3>
                         <Badge variant="outline">{formData.votingAlgorithm}</Badge>
                       </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <h4 className="font-medium">Description</h4>
-                      <p className="text-sm text-muted-foreground">{formData.description}</p>
                     </div>
 
                     <div className="space-y-2">

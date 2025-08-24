@@ -11,11 +11,11 @@ pub fn guard_caller_is_controller() -> Result<(), String> {
 }
 
 pub fn guard_caller_is_feeder() -> Result<(), String> {
-    // let caller = ic_cdk::api::caller();
+    let caller = ic_cdk::api::caller();
     
-    // if !is_authorized(caller, AccessMask::Feeder) {
-    //     Err("Caller is unauthorized".to_string())
-    // } else {
+    if !is_authorized(caller, AccessMask::Feeder) {
+        Err("Caller is unauthorized".to_string())
+    } else {
         Ok(())
-    // }
+    }
 }

@@ -20,6 +20,8 @@ import {
   Users,
   Calendar,
   StopCircle,
+  ToggleRight,
+  ToggleLeft,
 } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -44,7 +46,8 @@ type Proposal = {
     function: string,
     parameters: {name: string, type: string, value: string}[],
     estimatedGas: string,
-    value: string
+    value: string,
+    data: string,
   },
   votingPower: bigint,
   userHasVoted: boolean,
@@ -79,11 +82,12 @@ async function loadProposal(id: string, identity: Identity): Promise<Proposal | 
       contract: metadata[0].execution_payload[0]?.to ?? '',
       function: 'mint',
       parameters: [
-        { name: 'to', type: 'address', value: '' },
-        { name: 'amount', type: 'uint256', value: '200' }
+        { name: '_account', type: 'address', value: '0xa262aafec5987ec44accbdb56ba17adb195a34ff' },
+        { name: '_amount', type: 'uint256', value: Number(100000000).toLocaleString() }
       ],
       estimatedGas: "45,000",
       value: "0 ETH",
+      data: '0x'
     },
     votingPower,
     userHasVoted: hasCastVote,
@@ -102,17 +106,32 @@ async function closeVote(id: string, identity: Identity) {
 }
 
 function ExecutionDetails({ execution }: { execution: Proposal['execution'] }) {
+  const [showRawData, setShowRawData] = useState(false)
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Code className="w-5 h-5" />
-          <span>Execution Details</span>
+          <div className="flex items-center space-x-2">
+            <Code className="w-5 h-5" />
+            <span>Execution Details</span>
+          </div>
+          <Button variant="ghost" size="sm" onClick={() => setShowRawData(!showRawData)} className="text-xs">
+            {showRawData ? <ToggleRight className="w-4 h-4 mr-1" /> : <ToggleLeft className="w-4 h-4 mr-1" />}
+            {showRawData ? "Parsed" : "Raw"}
+          </Button>
         </CardTitle>
         <CardDescription>Transaction that will be executed if this proposal passes</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-3">
+        {
+          showRawData ?
+          <div className="bg-muted p-3 rounded font-mono text-xs overflow-x-auto break-all whitespace-pre-wrap">
+            <pre className="whitespace-pre-wrap break-all">
+              {execution.data}
+            </pre>
+          </div> :
+          <div className="space-y-3">
           <div>
             <label className="text-sm font-medium text-muted-foreground">Contract Address</label>
             <div className="flex items-center space-x-2 mt-1">
@@ -156,6 +175,7 @@ function ExecutionDetails({ execution }: { execution: Proposal['execution'] }) {
             </div>
           </div>
         </div>
+        }
       </CardContent>
     </Card>
   )
@@ -366,7 +386,7 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-foreground">{proposal.votingPower}</p>
+                    <p className="text-2xl font-bold text-foreground">{proposal.votingPower.toLocaleString()}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -393,16 +413,6 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                       <span className="font-medium">{proposal.votesAgainst.toLocaleString()}</span>
                     </div>
                     <Progress value={100 - votePercentage} className="h-2" />
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Quorum Progress</span>
-                      <span className="font-medium">{quorumPercentage.toFixed(1)}%</span>
-                    </div>
-                    <Progress value={quorumPercentage} className="h-2" />
                   </div>
                 </CardContent>
               </Card>
@@ -455,7 +465,7 @@ export default function ProposalPage({ params }: { params: { id: string } }) {
                       >
                         <ThumbsUp className="w-3 h-3 mr-1" />
                       </Badge>
-                      <p className="text-sm text-muted-foreground mt-2">You voted with {proposal.votingPower}</p>
+                      <p className="text-sm text-muted-foreground mt-2">You voted with {proposal.votingPower.toLocaleString()}</p>
                     </div>
                   </CardContent>
                 </Card>

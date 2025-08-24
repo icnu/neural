@@ -19,6 +19,8 @@ type DAO = {
   id: string,
   name: string,
   logo: string,
+  url: string,
+  token: string,
   totalSupply: bigint,
   proposalCount: number
   votingPower: bigint,
@@ -74,6 +76,8 @@ async function loadDAO(canister: string, identity: Identity): Promise<DAO> {
     id: canister,
     name: metadata.name[0] ?? '',
     logo: metadata.logo[0] ?? '/placeholder.png',
+    url: metadata.url[0] ?? '',
+    token: '0x25d415dc77Beb59127eFFB0558c6eC8ED14b1824',
     totalSupply: votingPower,
     proposalCount: proposals.length,
     votingPower: votingPower,
@@ -220,7 +224,7 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
                   <span className="text-xs text-accent-foreground font-bold">VP</span>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-card-foreground">{dao.votingPower}</p>
+                  <p className="text-lg font-semibold text-card-foreground">{dao.votingPower.toLocaleString()}</p>
                   <p className="text-sm text-muted-foreground">Your Balance</p>
                 </div>
               </div>
@@ -234,6 +238,42 @@ export default function DAODetailPage({ params }: { params: { id: string } }) {
                     {dao.executionAddress.slice(0, 6)}...{dao.executionAddress.slice(-4)}
                   </p>
                   <p className="text-sm text-muted-foreground">Execution Address</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-border">
+              <div className="flex items-center space-x-3">
+                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-xs text-white font-bold">🌐</span>
+                </div>
+                <div>
+                  <a
+                    href={dao.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:text-blue-800 underline"
+                  >
+                    {dao.url}
+                  </a>
+                  <p className="text-sm text-muted-foreground">Website</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center">
+                  <span className="text-xs text-white font-bold">📄</span>
+                </div>
+                <div>
+                  <a
+                    href={`https://sepolia.etherscan.io/address/${dao.token}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-mono text-purple-600 hover:text-purple-800 underline"
+                  >
+                    {dao.token.slice(0, 6)}...{dao.token.slice(-4)}
+                  </a>
+                  <p className="text-sm text-muted-foreground">Token Contract</p>
                 </div>
               </div>
             </div>
