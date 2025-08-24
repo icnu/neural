@@ -1,4 +1,4 @@
-# Neuron Bot
+# Neural
 
 _This project is a part of series of projects, **Neural** for WCHL 2025, meant to make the ICP DAO capabilities accessible to organizations outside ICP. The goal is to establish ICP as the de-facto DAO platform for any needs._
 
@@ -23,8 +23,7 @@ _More commands to be added as we go on with the project_
 
 ## Architecture
 
-<img width="1758" height="1180" alt="image" src="https://github.com/user-attachments/assets/386f2a72-8513-4463-8e29-f36ff322853a" />
-
+<img width="2958" height="1658" alt="image" src="https://github.com/user-attachments/assets/02db407c-602f-4eb7-a32d-28a7aba02e2d" />
 
 The project has 3 components:
 - **Registry Canister:** This canister is a clone of the Encrypted Maps canister. It stores the encrypted User Identity data, and verifies the TEE Attestations through a handshake process for access to encrypted values.
@@ -69,6 +68,8 @@ DISCORD_BOT_CLIENT_ID=
 FRONTEND_URL=
 VITE_DISCORD_PROXY_HOSTNAME=http://localhost:3000
 REGISTRY_CANISTER_ICP_NETWORK_URL=http://localhost:4943
+RPC_URL= # your ETH JSON RPC URL
+DFX_NETWORK=ic
 ```
 Fill your Discord bot client id and token, and the frontend url (either deployed asset canister or vite local instance url).
 
@@ -83,8 +84,11 @@ To start the project locally, run:
 ```bash 
 dfx start --background --clean
 npm run setup
-npm run deploy
+npm run deploy:identity
+npm run deploy:registry
+npm run deploy:hub
 npm run start:proxy
+npm run start:frontend
 ```
 
 ## About Neural
