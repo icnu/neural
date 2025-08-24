@@ -1,4 +1,3 @@
-use candid::Nat;
 use common::bindings::dao_canister::ProposalVerdict;
 use ic_cdk::{export_candid, init, query, update};
 use crate::vote::types::{InitArgs, VoteMetadata};
