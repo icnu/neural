@@ -121,8 +121,10 @@ The vision of Neural is to use ICP to provide a chain-agnostic DAO Governance La
 ### :white_check_mark: Neuron Bot - Governance where the people are
 A Discord Bot that allows governance for ICP SNS DAOs from within the Discord app. The architecture could be extended to other centralized communication platforms like Telegram, Discourse Forums, etc and bring the governance layer closer to where people talk.
 
+Link: [https://github.com/icnu/neuron-bot](https://github.com/icnu/neuron-bot)
+
 ### :white_check_mark: Neural Hub
-The cross-chain governance layer for DAOs that works across Ethereum, Solana, ICP and Aptos. Completely on-chain and auditable voting and proposals with native chain support for Ethereum.  
+_(This Round)_ The cross-chain governance layer for DAOs that works across Ethereum, Solana, ICP and Aptos. Completely on-chain and auditable voting and proposals with native chain support for Ethereum.
 
 ### :large_blue_circle: Extending Neural Hub
 Adding support for more chains - Solana, Aptos, Integrating the native voting strategies for easier migration, and 3rd party multisigs - Gnosis Safe, Orbit for decentralized transaction execution. Finding product-market fit, growth and monetization strategy.
