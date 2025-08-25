@@ -9,10 +9,12 @@ This project enables seamless, secure, and privacy-conscious voting on Internet 
 [Demo Video](https://youtu.be/dUQh-IkHy70) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1qW7-CRB6_LgfBYmMXB7KT_abk2aB5U_x/view?usp=sharing)
 
 ## Features
-- Gasless decentralized voting
-- Truly decentralized cross-chain DAO infrastructure
+- Fully on-chain governance layer
+- Gasless decentralized voting using ICP's reverse gas model
+- Truly decentralized cross-chain infrastructure
 - Native integration for multi-chain transaction execution
-- Auditable
+- Bridges gap between stakeholders & governance
+- Auditable, scalable & secure
 
 ## How does it work?
 
@@ -113,11 +115,14 @@ Next.js provides features that makes building multi-page frontend apps easy. But
 
 Neural is a larger project that aims to reimagine Decentralized Governance for everyone. In chains outside ICP ecosystem like Ethereum, Solana, Aptos, because of the high gas costs and slow transactions, the DAO ecosystem is mostly on centralized voting and governance apps. This creates a paradox where DAOs that came with the promise of decentralization are themselves centralized.
 
-The vision of Neural is to use ICP to provide a chain-agnostic DAO Governance Layer, that is not gas-heavy yet on-chain and auditable, and close to where the people actually are - Discord, Telegram and Discourse Forums. With Neural, every DAO across all chains can become truly on-chain just at a fraction of the current cost of providers. This will make ICP the heart of DAOs, in-turn entire Web3 ecosystem.
+The vision of Neural is to use ICP to provide a chain-agnostic DAO Governance Layer, that is not gas-heavy yet on-chain and auditable, and close to where the people actually are - Discord, Telegram and Discourse Forums. With Neural, DAOs across all chains can become truly on-chain just at a fraction of the current cost of providers and no compromise in user experience. This will make ICP the heart of DAOs, in-turn entire Web3 ecosystem.
 
 ## Roadmap
-### Neuron Bot - Governance where the people are
+### :white_check_mark: Neuron Bot - Governance where the people are
 A Discord Bot that allows governance for ICP SNS DAOs from within the Discord app. The architecture could be extended to other centralized communication platforms like Telegram, Discourse Forums, etc and bring the governance layer closer to where people talk.
 
-### Neural Hub
-The cross-chain governance layer for DAOs that works across Ethereum, Solana, ICP and Aptos. Completely on-chain and auditable voting and proposals with native chain support.
+### :white_check_mark: Neural Hub
+The cross-chain governance layer for DAOs that works across Ethereum, Solana, ICP and Aptos. Completely on-chain and auditable voting and proposals with native chain support for Ethereum.  
+
+### :large_blue_circle: Extending Neural Hub
+Adding support for more chains - Solana, Aptos, Integrating the native voting strategies for easier migration, and 3rd party multisigs - Gnosis Safe, Orbit for decentralized transaction execution. Finding product-market fit, growth and monetization strategy.
