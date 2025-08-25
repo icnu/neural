@@ -2,9 +2,13 @@
 
 _This project is a part of series of projects, **Neural** for WCHL 2025, meant to make the ICP DAO capabilities accessible to organizations outside ICP. The goal is to establish ICP as the de-facto DAO platform for any needs._
 
-Voting on SNS proposals, Stake-aware Access Controls, Enhanced Community Collaboration, all through Discord now!
+Cross-chain, Fully Decentralized and Web2-Like Gasless Governance Layer on ICP for Any Chain
 
-This project enables seamless, secure, and privacy-conscious voting on Internet Computer’s SNS (Service Nervous System) proposals directly within Discord. It leverages Internet Identity, VetKeys and TEEs to make the entire user-flow completely secure. Designed with extensibility in mind, the system also lays the foundation for advanced community features such as stake-aware access control and enhanced governance workflows — turning Discord into a robust platform for decentralized decision-making and engagement.
+Neural allows any DAO on any chain, to easily integrate an ICP-based Governance Layer and take advantage of ICP's Chain Fusion technology for a completely decentralized and cross-chain gasless governance experience for it's stakeholders. Neural eliminates any need for complex DAO mechanisms with it's native transaction execution integration triggered automatically by accepted proposals across chains.
+
+Moreover, stakeholders get an unmatched experience with Neural with it's gasless and multi-chain login experience that truly brings Chain Abstraction to reality! Neural also integrates with previous round's Neuron Discord Bot, and provides the same ease of voting and governance right from the Discord app, bringing governance closer to the stakeholders.
+
+Neural unlike any other platform, is completely on-chain on ICP, secure, scalable and comes with auditable voting results for DAOs.
 
 [Demo Video](https://youtu.be/dUQh-IkHy70) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1qW7-CRB6_LgfBYmMXB7KT_abk2aB5U_x/view?usp=sharing)
 
@@ -15,6 +19,8 @@ This project enables seamless, secure, and privacy-conscious voting on Internet 
 - Native integration for multi-chain transaction execution
 - Bridges gap between stakeholders & governance
 - Auditable, scalable & secure
+- Seamless migration
+- Web2-Like User Experience with Web3 Security
 
 ## How does it work?
 
