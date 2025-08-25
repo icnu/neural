@@ -1,0 +1,14 @@
+{
+  "hub_canister": {
+    "ic": "f2rvu-aiaaa-aaaai-q327q-cai"
+  },
+  "identity_canister": {
+    "ic": "f5qta-nqaaa-aaaai-q327a-cai"
+  },
+  "registry_canister": {
+    "ic": "bs7kw-uiaaa-aaaam-aenqq-cai"
+  },
+  "frontend": {
+    "ic": "bv6mc-zqaaa-aaaam-aenqa-cai"
+  }
+}

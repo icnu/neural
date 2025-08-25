@@ -53,8 +53,10 @@ The project uses the following external components:
 
 
 ## Deployed Canisters
-- Frontend Canister: [bv6mc-zqaaa-aaaam-aenqa-cai](https://dashboard.internetcomputer.org/canister/bv6mc-zqaaa-aaaam-aenqa-cai)
+- Hub Canister: [f2rvu-aiaaa-aaaai-q327q-cai](https://dashboard.internetcomputer.org/canister/f2rvu-aiaaa-aaaai-q327q-cai)
+- Identity Canister: [f5qta-nqaaa-aaaai-q327a-cai](https://dashboard.internetcomputer.org/canister/f5qta-nqaaa-aaaai-q327a-cai)
 - Registry Canister: [bs7kw-uiaaa-aaaam-aenqq-cai](https://dashboard.internetcomputer.org/canister/bs7kw-uiaaa-aaaam-aenqq-cai)
+- Frontend Canister: [bv6mc-zqaaa-aaaam-aenqa-cai](https://dashboard.internetcomputer.org/canister/bv6mc-zqaaa-aaaam-aenqa-cai)
 
 ## Local Setup
 
