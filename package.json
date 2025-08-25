@@ -4,11 +4,12 @@
   "description": "",
   "scripts": {
     "build": "bash scripts/build_canisters.sh",
+    "setup": "cd src/frontend && pnpm i && cd ../oc_agent && pnpm i",
     "deploy:hub": "bash scripts/deploy_hub.sh",
     "deploy:identity": "dfx deploy identity_canister",
     "deploy:registry": "dfx deploy registry_canister",
     "start:frontend": "cd src/frontend && npm run dev",
-    "start:oc_agent": "cd src/oc_agent && npm run dev"
+    "start:proxy": "cd src/oc_agent && npm run dev"
   },
   "type": "module",
   "keywords": [],
