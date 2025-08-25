@@ -27,6 +27,8 @@ This project enables seamless, secure, and privacy-conscious voting on Internet 
 
 - VetKeys - in Registry Canister, for encrypted state
 - Chain Fusion - for transaction execution in DAO Canister
+  - HTTP Outcalls
+  - Threshold ECDSA
 
 ## Architecture
 
