@@ -12,6 +12,13 @@ Neural unlike any other platform, is completely on-chain on ICP, secure, scalabl
 
 [Demo Video](https://youtu.be/dUQh-IkHy70) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1qW7-CRB6_LgfBYmMXB7KT_abk2aB5U_x/view?usp=sharing)
 
+## Problem Statement
+
+- Slow and costly chains rely on complicated **centralized infrastructure** for DAO governance.
+- No true cross-chain DAO Governance solution.
+- Multiple chains, multiple gas currencies = Bad User Experience.
+- Disconnect between Governance and Stakeholders.
+
 ## Features
 - Fully on-chain governance layer
 - Gasless decentralized voting using ICP's reverse gas model
