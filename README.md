@@ -51,6 +51,11 @@ The project uses the following external components:
 - **Internet Identity:** For authentication
 - **EVM / SOL RPC Canister:** For transaction execution
 
+## Security & Scaling
+
+Sensitive data are all encrypted and stored in the Registry Canister using VetKeys on ICP. The Registry Canister grants access to the keys, only to the Proxy Agent by verifying the Nitro TEE Attestations, and matching the running image hash to the last release. This ensures the sensitive data is not exposed in any way.
+
+The project is highly scalable and cost efficient, and with a few tweaks, can be horizontally scaled over multiple subnets. The major bottlenecks in our competitors is in the Token Index management. We have specifically engineered the Token Index canister and it's snapshotting functionality to support the biggest DAOs on cryptos - **200K+ token holders**. While not at the finest, it will get polished over the next few rounds.
 
 ## Deployed Canisters
 - Hub Canister: [f2rvu-aiaaa-aaaai-q327q-cai](https://dashboard.internetcomputer.org/canister/f2rvu-aiaaa-aaaai-q327q-cai)
@@ -96,6 +101,13 @@ npm run deploy:hub
 npm run start:proxy
 npm run start:frontend
 ```
+
+## Problems Faced
+
+**Limited availability of static exports in Next.js App Router leading to difficulty in deploying frontend on-chain.**
+
+Next.js provides features that makes building multi-page frontend apps easy. But sadly these features do not support static export and thus hinders on-chain deployment on ICP's Asset Canister. We have only partially deployed the frontend, but in future rounds will shift to a different framework and deploy.
+
 
 ## About Neural
 
