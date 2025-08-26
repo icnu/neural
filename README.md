@@ -10,7 +10,7 @@ Moreover, stakeholders get an unmatched experience with Neural with it's gasless
 
 Neural unlike any other platform, is completely on-chain on ICP, secure, scalable and comes with auditable voting results for DAOs.
 
-[Demo Video](https://youtu.be/dUQh-IkHy70) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1qW7-CRB6_LgfBYmMXB7KT_abk2aB5U_x/view?usp=sharing)
+[Pitch Video](https://youtu.be/zJYonOtkrrU) &nbsp; [Pitch Deck](https://drive.google.com/file/d/1CoDka7G5KuGPTmYo2DA3j-JcMZDU35tz/view?usp=sharing) &nbsp; [Demo Video](https://youtu.be/dUQh-IkHy70)
 
 ## Problem Statement
 
